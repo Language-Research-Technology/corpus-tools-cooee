@@ -1,0 +1,27 @@
+{
+  "name": "corpus-tools COOEE",
+  "version": "1.0.0",
+  "description": "Converts metadata in spreadsheet for the COOEE corpus o RO-Crate",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Language-Research-Technology/corpus-tools-cooee.git"
+  },
+  "author": "Peter Sefton",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/Language-Research-Technology/corpus-tools-cooee/issues"
+  },
+  "homepage": "https://github.com/Language-Research-Technology/corpus-tools-cooee#readme",
+  "dependencies": {
+    "commander": "^8.1.0",
+    "exceljs": "^4.3.0",
+    "ocfl": "^1.0.9",
+    "oni-ocfl": "git+https://github.com/Language-Research-Technology/oni-ocfl.git",
+    "ro-crate": "^2.0.2",
+    "xlsx": "^0.17.3"
+  }
+}
