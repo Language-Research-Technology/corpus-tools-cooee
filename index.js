@@ -8,7 +8,7 @@ const tmp = require('tmp');
 const path = require('path');
 const XLSX = require('xlsx');
 const { arcpId } = require('oni-ocfl');
-const { Dirent } = require('fs');
+const { Dirent, copyFile } = require('fs');
 
 
 const prov = new Provenance();
@@ -36,6 +36,24 @@ const registers = [
   {"@id": "#register_PcW", "name": "Public Written", "@type": "Concept"},
   {"@id": "#register_GE", "name": "Government English", "@type": "Concept"}
   ]
+
+// TODO - move this to a corpus-tools library for reuse
+  async function getFile(file, templateDir, corpusCrateDir) {
+    srcPath = path.join(templateDir, file["@id"]);
+    destPath = path.join(corpusCrateDir, file["@id"]);
+    //console.log("Copying", srcPath, destPath)
+    await fs.ensureFile(destPath);
+    try {
+      await fs.ensureFile(destPath);
+      await fs.copyFile(srcPath, destPath);
+      //console.log("Copied file", srcPath);
+
+    }
+    catch(e) {
+      console.log(e)
+    }
+  }
+
 
 async function main() {
   
@@ -111,10 +129,10 @@ async function main() {
         }
         corpusCrate.addItem(work);
         citedNames[authorName] = work;
-        console.log(work["@id"], corpusCrate.getItem(work["@id"]))
+        //console.log(work["@id"], corpusCrate.getItem(work["@id"]))
       }
     }
-    console.log(citedNames);
+    //console.log(citedNames);
     
     var worksheet = workbook.Sheets[workbook.SheetNames[0]];
 
@@ -176,9 +194,11 @@ async function main() {
 
       const file = {
         "@id": `data/${input.Nr}.txt`,
+        "@type": "File"
       }
       const plain = {
         "@id": `data/${input.Nr}-plain.txt`,
+        "@type": "File"
       }
       // TODO - sort out citations for federation debates
 
@@ -199,7 +219,7 @@ async function main() {
 
       const item = {
         "@id": id,
-        "@type": ["RepositoryObject", "CreativeWork"],
+        "@type": ["RepositoryObject", "Article"],
         "name": `Text ${input.Nr} ${date} ${author.name}`,
         "author" : {"@id": authorProxy["@id"]},
         "dateCreated": date,
@@ -209,28 +229,33 @@ async function main() {
       };
 
       const citationStub = {
-        "@type": "CreativeWork",
+        "@type": "Article",
         "partOf": {"@id": citedId},
         "name": input.Source,
-        "@id": citationStubId
+        "@id": citationStubId,
+        "wordCount": input["# of words"]
       };
 
      
       // 
       if (input.Pages != "x") {
         const pages = input.Pages.split("-"); 
-        citationStub.pageStart = pages[0];
+        const start = pages[0];
+        citationStub.pageStart = start;
+        const end = pages[1];
         if (pages[1]) {
-          citationStub.pageEnd = pages[1];
+            if (end.length < start.length) {
+            citationStub.pageEnd = start.slice(0, start.length - end.length) + end;
+          } else {
+            citationStub.pageEnd = end;
+          }
         }
-        citationStub.name += ` p${input.Pages}`;
+          citationStub.name += ` p${input.Pages}`;
       }
-      console.log(citationStub, cited);
-
-
 
       
-      
+   
+
       corpusCrate.addItem(item);
       corpusCrate.addItem(citationStub);
       corpusCrate.addItem(file);
@@ -241,7 +266,7 @@ async function main() {
 
       corpusCrate.addItem(author);
       corpusCrate.addItem(authorProxy);
-
+      
       corpusRoot.hasMember.push({"@id": item["@id"]});
 
 
@@ -250,6 +275,13 @@ async function main() {
 
       a["@id"].localeCompare(b["@id"]))
     )
+
+    for (let item of corpusCrate.getGraph()) {
+      /// TODO - change to a new getItemsOfType() when available
+      if (corpusCrate.utils.asArray(item["@type"]).includes("File")) {
+        await getFile(item, templateDir, corpusCrateDir)
+      }
+    }
 
     const rocrateFile = path.join(corpusCrateDir, "ro-crate-metadata.json");
     corpusCrate.addIdentifier({name: repoName, identifier: corpusRoot.identifier});
