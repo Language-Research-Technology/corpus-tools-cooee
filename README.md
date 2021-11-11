@@ -25,8 +25,8 @@ xlro cooee-attachments
 
 ## manual changes
 
-I (Peter Sefton) ade some changes to the spreadsheet to make bibliographic references work
+I (Peter Sefton) ade some changes to the spreadsheet to make bibliographic references work (the original is there as well)
 
-    References to the:
+
 
 Only one work from Henry Lawson 1900 was referenced (as Lawson, 1900, track)
