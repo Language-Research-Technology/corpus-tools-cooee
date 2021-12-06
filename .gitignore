@@ -106,3 +106,4 @@ dist
 .idea
 temp
 ocfl-repo
+.DS_Store

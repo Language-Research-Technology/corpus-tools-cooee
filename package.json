@@ -20,6 +20,7 @@
     "commander": "^8.1.0",
     "exceljs": "^4.3.0",
     "ocfl": "^1.0.9",
+    "oni-ocfl": "git+https://github.com/Language-Research-Technology/oni-ocfl.git#feature-collector",
     "ro-crate": "^2.0.2",
     "xlsx": "^0.17.3"
   }
