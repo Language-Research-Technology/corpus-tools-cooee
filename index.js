@@ -1,26 +1,10 @@
-const {ROCrate, Provenance} = require('language-data-node-tools');
-const {program} = require('commander');
-program.version('0.0.1');
-const fs = require("fs-extra");
-const _ = require("lodash");
-const oniOcfl = require("oni-ocfl");
-const tmp = require('tmp');
-const path = require('path');
+const {Collector} = require("oni-ocfl");
+const {languageProfileURI} = require("language-data-node-tools");
 const XLSX = require('xlsx');
-const { arcpId } = require('oni-ocfl');
-const { Dirent, copyFile } = require('fs');
 
-
-const prov = new Provenance();
-
-program.version('0.0.1');
-
-async function connectRepo(repoPath) {
-  const repo = await oniOcfl.connectRepo(repoPath);
-  return repo;
+const extraContext = {
+ "register": "http://w3id.org/meta-share/meta-share/register"
 }
-
-// hand-coded the coding tables from COOEE.xls
 
 const classes = [
   {"@id": "#class_I", "name": "Upper Class", "description": " Nobility, university education, government service; Parliaments and Committees", "@type": "Concept"},
@@ -37,101 +21,52 @@ const registers = [
   {"@id": "#register_GE", "name": "Government English", "@type": "Concept"}
   ]
 
-// TODO - move this to a corpus-tools library for reuse
-  async function getFile(file, templateDir, corpusCrateDir) {
-    srcPath = path.join(templateDir, file["@id"]);
-    destPath = path.join(corpusCrateDir, file["@id"]);
-    //console.log("Copying", srcPath, destPath)
-    await fs.ensureFile(destPath);
-    try {
-      await fs.ensureFile(destPath);
-      await fs.copyFile(srcPath, destPath);
-      //console.log("Copied file", srcPath);
 
-    }
-    catch(e) {
-      console.log(e)
-    }
+async function main() {
+  const coll = new Collector(); // Get all the paths etc from commandline
+  await coll.connect();
+  // Make a base corpus using template
+  const corpus = coll.newObject(coll.templateCrateDir);
+
+  const corpusCrate = corpus.crate;
+  corpusCrate.a
+  corpusCrate.addProfile(languageProfileURI("Collection"));
+  const corpusRoot = corpus.rootDataset;
+  corpus.mintArcpId("corpus","root");
+  for (let register of registers) {
+    corpusCrate.addItem(register);
+  }
+  for (let cl of classes) {
+    corpusCrate.addItem(cl);
   }
 
 
-async function main() {
-  
-  program.option('-r, --repo-path <type>', 'Path to OCFL repository')
-  .option('-n, --repo-name <type>', 'Name of OCFL repository')
-  .option('-s, --namespace <ns>', 'namespace for ARCP IDs')
-  .option('-t, --template <dirs>', 'RO-Crate directory on which to base this the RO-Crate metadata file will be used as a base and any files copied in to the new collection crate')
-  .option('-d --data-dir <dirs>', "Directory of data files")
-  .option('-p --temp-path <dirs>', 'Temporary Directory Path')
-  .option('-x --excel <file>', 'Excel file')
-
-    program.parse(process.argv);
-    const opts = program.opts();
-    const repoPath = opts.repoPath;
-    const repoName = opts.repoName;
-    const dataDir = opts.dataDir;
-    const namespace = opts.namespace; 
-    const templateDir = opts.template; 
-    const tempDirPath = opts.tempPath || 'temp';
-    const filename = opts.excel;
-    if(!namespace) {
-      console.error('Please input namespace for ARCP IDs');
-      process.exit(-1);
-    }
-
-    const repo = await connectRepo(repoPath);
-
-    if (!fs.existsSync(tempDirPath)) {
-      fs.mkdirSync(tempDirPath);
-    }
-    console.log(`Writing temp output in: ${tempDirPath} it may not be gracefully deleted`);
-    const tmpobj = tmp.dirSync({tmpdir: tempDirPath});
-    const corpusCrateDir = tmpobj.name;
-
- 
-    const inputFile = path.join(templateDir, "ro-crate-metadata.json");
-    const corpusCrate = new ROCrate(JSON.parse(fs.readFileSync(inputFile)));
-    corpusCrate.index();
-
-    for (let register of registers) {
-      corpusCrate.addItem(register);
-    }
-    for (let cl of classes) {
-      corpusCrate.addItem(cl);
-    }
-    const corpusRoot = corpusCrate.getRootDataset();
-    const  corpusID = corpusCrate.arcpId(namespace, "root", "description");
-    corpusRoot.identifier = corpusID;
-    corpusRoot.hasPart = [];
-    corpusRoot.hasMember = [];
-    corpusRoot["@type"] = ["Collection", "Dataset"];
 
 
+  var workbook = await XLSX.readFile(coll.excelPath, { cellDates: true });
+  var bibsheet = workbook.Sheets[workbook.SheetNames[1]];
 
-    var workbook = await XLSX.readFile(filename, { cellDates: true });
-    var bibsheet = workbook.Sheets[workbook.SheetNames[1]];
-
-    const bibData = XLSX.utils.sheet_to_json(bibsheet, {raw: false});
-    // Decode publications
-    const citedNames = {};
-    for (const pub of bibData) {
-      //console.log(pub)
-      if (pub.Author) {
-        const authorName = pub.Author.replace(/,.*/,"").replace(/ /g, "_");
-        const work = {
-          "@type": "CreativeWork",
-          author: pub.Author,
-          datePublished: pub.Date,
-          name: pub.Title,
-          publisher: pub.Source,
-          wordCount: pub["Words CEEA"],
-          "@id": corpusCrate.arcpId(namespace, "work", `${authorName}${pub.Date}`)
-        }
-        corpusCrate.addItem(work);
-        citedNames[authorName] = work;
-        //console.log(work["@id"], corpusCrate.getItem(work["@id"]))
+  const bibData = XLSX.utils.sheet_to_json(bibsheet, {raw: false});
+  // Decode publications
+  const citedNames = {};
+  for (const pub of bibData) {
+    //console.log(pub)
+    if (pub.Author) {
+      const authorName = pub.Author.replace(/,.*/,"").replace(/ /g, "_");
+      const work = {
+        "@type": "CreativeWork",
+        author: pub.Author,
+        datePublished: pub.Date,
+        name: pub.Title,
+        publisher: pub.Source,
+        wordCount: pub["Words CEEA"],
+        "@id": corpusCrate.arcpId(corpus.namespace, "work", `${authorName}${pub.Date}`)
       }
+      corpusCrate.addItem(work);
+      citedNames[authorName] = work;
+      //console.log(work["@id"], corpusCrate.getItem(work["@id"]))
     }
+  }
     //console.log(citedNames);
     
     var worksheet = workbook.Sheets[workbook.SheetNames[0]];
@@ -165,13 +100,13 @@ async function main() {
       }
       */
       const date = input["Year Writing"];
-      const id = corpusCrate.arcpId(namespace, "item", input["Nr"]);
+      const id = corpusCrate.arcpId(corpus.namespace, "item", input["Nr"]);
       const authorID = `${input.Name.replace(/[, ]+/, "_")}`;
 
 
 
       const author = {
-        "@id": corpusCrate.arcpId(namespace, "author", authorID),
+        "@id": corpusCrate.arcpId(corpus.namespace, "author", authorID),
         "@type": "Person",
         "name": input.Name,
         "birthDate": input.Birth,
@@ -198,11 +133,11 @@ async function main() {
       }
       const plain = {
         "@id": `data/${input.Nr}-plain.txt`,
-        "@type": "File"
+        "@type": ["File", "OrthographicText"]
       }
       // TODO - sort out citations for federation debates
 
-      var citedId = corpusCrate.arcpId(namespace, "work", input.Source.replace(", ", "").replace(/ /g, "_"))
+      var citedId = corpusCrate.arcpId(corpus.namespace, "work", input.Source.replace(", ", "").replace(/ /g, "_"))
       var cited = corpusCrate.getItem(citedId)
       if (!cited) {
         //Not an exact match - lets try jsut by name
@@ -219,7 +154,7 @@ async function main() {
 
       const item = {
         "@id": id,
-        "@type": ["RepositoryObject", "Article"],
+        "@type": ["RepositoryObject", "OrthographicText"],
         "name": `Text ${input.Nr} ${date} ${author.name}`,
         "author" : {"@id": authorProxy["@id"]},
         "dateCreated": date,
@@ -272,28 +207,19 @@ async function main() {
 
     }
     corpusRoot.hasMember.sort((a,b)=>(
-
       a["@id"].localeCompare(b["@id"]))
     )
 
     for (let item of corpusCrate.getGraph()) {
       /// TODO - change to a new getItemsOfType() when available
       if (corpusCrate.utils.asArray(item["@type"]).includes("File")) {
-        await getFile(item, templateDir, corpusCrateDir)
+        await corpus.addFile(item, coll.templateCrateDir);
       }
     }
 
-    const rocrateFile = path.join(corpusCrateDir, "ro-crate-metadata.json");
-    corpusCrate.addIdentifier({name: repoName, identifier: corpusRoot.identifier});
-    corpusCrate.addLgProfile("Collection");
-    corpusCrate.addProvenance(prov);
-    await fs.writeFileSync(rocrateFile, JSON.stringify(corpusCrate.getJson(), null, 2));
-    const resp =  await oniOcfl.checkin(repo, repoName, corpusCrateDir, corpusCrate, "md5", "ro-crate-metadata.json")
+   
+    await corpus.addToRepo();
 
-    console.log(`Wrote crate ${corpusCrateDir} : ${resp}`);
-    console.log(`Deleting temporary directory ${tempDirPath}`);
-    fs.rmSync(tempDirPath, { recursive: true, force: true });
-    tmp.setGracefulCleanup();
 
   } 
 
