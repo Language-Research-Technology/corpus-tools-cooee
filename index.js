@@ -215,12 +215,8 @@ async function main() {
       if (corpusCrate.utils.asArray(item["@type"]).includes("File")) {
         await corpus.addFile(item, coll.templateCrateDir);
       }
-    }
-
-   
+    } 
     await corpus.addToRepo();
-
-
   } 
 
 main();
