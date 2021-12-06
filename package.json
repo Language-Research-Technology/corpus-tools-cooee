@@ -1,5 +1,5 @@
 {
-  "name": "corpus-tools COOEE",
+  "name": "corpus-tools-cooee",
   "version": "1.0.0",
   "description": "Converts metadata in spreadsheet for the COOEE corpus o RO-Crate",
   "main": "index.js",
