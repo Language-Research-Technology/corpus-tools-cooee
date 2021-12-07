@@ -23,13 +23,17 @@ const registers = [
 
 
 async function main() {
+
+
   const coll = new Collector(); // Get all the paths etc from commandline
   await coll.connect();
   // Make a base corpus using template
   const corpus = coll.newObject(coll.templateCrateDir);
 
   const corpusCrate = corpus.crate;
-  corpusCrate.a
+  // TODO need some tools for all this
+  corpusCrate.addContext({"register": "http://w3id.org/meta-share/meta-share/register"});
+
   corpusCrate.addProfile(languageProfileURI("Collection"));
   const corpusRoot = corpus.rootDataset;
   corpus.mintArcpId("corpus","root");

@@ -19,3 +19,4 @@ repo :
 
 clean :
 	rm -rf ${TEMP_DIR}
+	rm -rf ${REPO_OUT_DIR}
