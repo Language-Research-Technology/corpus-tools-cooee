@@ -13,7 +13,7 @@ TEMP_DIR=${BASE_TEMP_DIR}
 repo :
 	node index.js -r "${REPO_OUT_DIR}" \
 	-t "${BASE_DATA_DIR}" -n ${REPO_NAME} \
-	-p ${TEMP_DIR} \
+	-p "${TEMP_DIR}" \
 	-s ${NAMESPACE} -x "${BASE_DATA_DIR}"/COOEE_contents.xlsx
 
 

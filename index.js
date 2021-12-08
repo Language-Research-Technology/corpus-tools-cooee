@@ -32,7 +32,7 @@ async function main() {
 
   const corpusCrate = corpus.crate;
   // TODO need some tools for all this
-  corpusCrate.addContext({"register": "http://w3id.org/meta-share/meta-share/register"});
+  corpusCrate.addContext(extraContext);
 
   corpusCrate.addProfile(languageProfileURI("Collection"));
   const corpusRoot = corpus.rootDataset;
@@ -64,7 +64,7 @@ async function main() {
         name: pub.Title,
         publisher: pub.Source,
         wordCount: pub["Words CEEA"],
-        "@id": corpusCrate.arcpId(corpus.namespace, "work", `${authorName}${pub.Date}`)
+        "@id": corpusCrate.arcpId(coll.namespace, "work", `${authorName}${pub.Date}`)
       }
       corpusCrate.addItem(work);
       citedNames[authorName] = work;
@@ -104,13 +104,13 @@ async function main() {
       }
       */
       const date = input["Year Writing"];
-      const id = corpusCrate.arcpId(corpus.namespace, "item", input["Nr"]);
+      const id = corpusCrate.arcpId(coll.namespace, "item", input["Nr"]);
       const authorID = `${input.Name.replace(/[, ]+/, "_")}`;
 
 
 
       const author = {
-        "@id": corpusCrate.arcpId(corpus.namespace, "author", authorID),
+        "@id": corpusCrate.arcpId(coll.namespace, "author", authorID),
         "@type": "Person",
         "name": input.Name,
         "birthDate": input.Birth,
@@ -141,7 +141,7 @@ async function main() {
       }
       // TODO - sort out citations for federation debates
 
-      var citedId = corpusCrate.arcpId(corpus.namespace, "work", input.Source.replace(", ", "").replace(/ /g, "_"))
+      var citedId = corpusCrate.arcpId(coll.namespace, "work", input.Source.replace(", ", "").replace(/ /g, "_"))
       var cited = corpusCrate.getItem(citedId)
       if (!cited) {
         //Not an exact match - lets try jsut by name
