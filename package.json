@@ -21,7 +21,12 @@
     "exceljs": "^4.3.0",
     "fs-extra": "^10.0.0",
     "ocfl": "^1.0.9",
+<<<<<<< HEAD
     "ro-crate": "^2.0.7",
+=======
+    "oni-ocfl": "git+https://github.com/Language-Research-Technology/oni-ocfl.git#feature-collector",
+    "ro-crate": "^2.0.2",
+>>>>>>> f902fe1055e19c6a3dc19fa1a4088aabfb9607c7
     "xlsx": "^0.17.3"
   }
 }
