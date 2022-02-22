@@ -1,6 +1,6 @@
 # corpus-tools-cooee
 
-Corpus prep tools for the COEEE corpus (using the spreadsheet that comes with the corpus)
+Corpus prep tools for the COOEEE corpus (using the spreadsheet that comes with the corpus)
 
 ## Install
 
@@ -17,10 +17,8 @@ npm link language-data-node-tools
 
 ## Usage 
 
-To run, try:
-
-```
-make
+```bash
+make BASE_DATA_DIR=/cooee/data REPO_OUT_DIR=/your/ocfl-repo BASE_TMP_DIR=/your/temp
 ```
 
 This will load the pre-prepared RO-Crate in ./cooee-attachments and the data in subfolder data under that, to update the metadata in the RO-Crate, edit the ro-crate-metadata.xlsx file and rebuild the .json file using RO-Crate excel:

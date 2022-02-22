@@ -1,8 +1,11 @@
 #! /bin/bash
 # MakeFile for creating COOEE corpus repo
+# Override BASE_DATA_DIR, REPO_OUT_DIR, BASE_TMP_DIR to point to the location of your datasets
+
+BASE_DATA_DIR=./cooee-attachments
+
 BASE_TEMP_DIR=temp
 REPO_OUT_DIR=./ocfl-repo
-BASE_DATA_DIR=./cooee-attachments
 
 REPO_NAME=ATAP
 NAMESPACE=cooee-corpus
