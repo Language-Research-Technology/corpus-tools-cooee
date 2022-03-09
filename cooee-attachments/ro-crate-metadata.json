@@ -10,7 +10,7 @@
   ],
   "@graph": [
     {
-      "@id": "./",
+      "@id": "arcp://name,cooee-corpus/corpus/root",
       "@type": "Dataset",
       "author": {
         "@id": "https://www.peterlang.com/search?f_0=author&q_0=Clemens+W.+A.+Fritz"
@@ -173,7 +173,7 @@
       "@id": "ro-crate-metadata.json",
       "@type": "CreativeWork",
       "about": {
-        "@id": "./"
+        "@id": "arcp://name,cooee-corpus/corpus/root"
       },
       "identifier": "ro-crate-metadata.json"
     }
