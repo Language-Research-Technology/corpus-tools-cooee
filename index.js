@@ -1,4 +1,4 @@
-const {Collector} = require("oni-ocfl");
+const {Collector, generateArcpId} = require("oni-ocfl");
 const {languageProfileURI} = require("language-data-node-tools");
 const XLSX = require('xlsx');
 
@@ -50,6 +50,7 @@ async function main() {
   const corpus = coll.newObject(coll.templateCrateDir);
 
   const corpusCrate = corpus.crate;
+  corpusCrate["@type"] = ["Dataset", "RepositoryCollection"];
   // TODO need some tools for all this
   corpusCrate.addContext(extraContext);
 
@@ -80,7 +81,7 @@ async function main() {
         name: pub.Title,
         publisher: pub.Source,
         wordCount: pub["Words CEEA"],
-        "@id": corpusCrate.arcpId(coll.namespace, "work", `${authorName}${pub.Date}`)
+        "@id": generateArcpId(coll.namespace, "work", `${authorName}${pub.Date}`)
       }
       corpusCrate.addItem(work);
       citedNames[authorName] = work;
@@ -120,11 +121,11 @@ async function main() {
     }
     */
     const date = input["Year Writing"];
-    const id = corpusCrate.arcpId(coll.namespace, "item", input["Nr"]);
+    const id = generateArcpId(coll.namespace, "item", input["Nr"]);
     const authorID = `${input.Name.replace(/[, ]+/, "_")}`;
 
     const author = {
-      "@id": corpusCrate.arcpId(coll.namespace, "author", authorID),
+      "@id": generateArcpId(coll.namespace, "author", authorID),
       "@type": "Person",
       "name": input.Name,
       "birthDate": input.Birth,
@@ -152,14 +153,13 @@ async function main() {
     }
     // TODO - sort out citations for federation debates
 
-    var citedId = corpusCrate.arcpId(coll.namespace, "work", input.Source.replace(", ", "").replace(/ /g, "_"))
+    var citedId = generateArcpId(coll.namespace, "work", input.Source.replace(", ", "").replace(/ /g, "_"))
     var cited = corpusCrate.getItem(citedId)
     if (!cited) {
       //Not an exact match - lets try jsut by name
       const authorName = input.Source.replace(/,.*/, "").replace(/ /g, "_").replace(/\d+/, "");
       cited = citedNames[authorName];
       if (!cited) {
-
         console.log("CANNOT FIND REFERENCE", authorName);
       }
     }
@@ -198,7 +198,7 @@ async function main() {
       }
       citationStub.name += ` p${input.Pages}`;
     }
-    
+
     corpusCrate.addItem(item);
     corpusCrate.addItem(citationStub);
     corpusCrate.addItem(file);
@@ -210,8 +210,8 @@ async function main() {
     corpusCrate.addItem(author);
     corpusCrate.addItem(authorProxy);
 
-    corpusRoot.hasMember.push({"@id": item["@id"]});
-
+    //corpusRoot.hasMember.push({"@id": item["@id"]});
+    corpusCrate.pushValue(corpusRoot, 'hasMember', {"@id": item["@id"]})
   }
   corpusRoot.hasMember.sort((a, b) => (
     a["@id"].localeCompare(b["@id"]))
