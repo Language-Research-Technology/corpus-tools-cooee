@@ -207,7 +207,8 @@ async function main() {
       "@type": ["File", "DerivedText"],
       "modality": vocab.getVocabItem("Orthography"),
       "annotationOf": citationStub,
-      "fileOf": item
+      "fileOf": item,
+      "language": engLang
     }
 
     const plain = {
@@ -216,8 +217,12 @@ async function main() {
       "@type": ["File", "DerivedText"],
       "annotationOf": citationStub,
       "modality": vocab.getVocabItem("Orthography"),
-      "fileOf": item
+      "fileOf": item,
+      "language": engLang
+
     }
+    item.language = engLang;
+
     item.indexableText = plain;
     item.hasFile = [plain, file],
 
