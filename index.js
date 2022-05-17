@@ -1,7 +1,7 @@
 const {Collector, generateArcpId} = require("oni-ocfl");
-const {languageProfileURI} = require("language-data-node-tools");
+const {languageProfileURI, Languages, Vocab} = require("language-data-node-tools");
 const XLSX = require('xlsx');
-
+console.log(Vocab)
 const extraContext = {
   "register": "http://w3id.org/meta-share/meta-share/register"
 }
@@ -11,38 +11,43 @@ const classes = [
     "@id": "#class_I",
     "name": "Upper Class",
     "description": " Nobility, university education, government service; Parliaments and Committees",
-    "@type": "Concept"
+    "@type": "DefinedTerm"
   },
   {
     "@id": "#class_II",
     "name": "Upper Middle Class",
     "description": " educated citizens, gentlemen",
-    "@type": "Concept"
+    "@type": "DefinedTerm"
   },
   {
     "@id": "#class_III",
     "name": "Lower Middle Class",
     "description": " free settlers with little education",
-    "@type": "Concept"
+    "@type": "DefinedTerm"
   },
   {
     "@id": "#class_IIII",
     "name": "Lower Class",
     "description": " convicts, labourers, uneducated people, servants",
-    "@type": "Concept"
+    "@type": "DefinedTerm"
   }
 ]
 
 
 const registers = [
-  {"@id": "#register_SB", "name": "Speech Based", "@type": "Concept"},
-  {"@id": "#register_PrW", "name": "Private Written", "@type": "Concept"},
-  {"@id": "#register_PcW", "name": "Public Written", "@type": "Concept"},
-  {"@id": "#register_GE", "name": "Government English", "@type": "Concept"}
+  {"@id": "#register_SB", "name": "Speech Based", "@type": "DefinedTerm"},
+  {"@id": "#register_PrW", "name": "Private Written", "@type": "DefinedTerm"},
+  {"@id": "#register_PcW", "name": "Public Written", "@type": "DefinedTerm"},
+  {"@id": "#register_GE", "name": "Government English", "@type": "DefinedTerm"}
 ]
 
 
 async function main() {
+  const vocab = new Vocab;
+  await vocab.load();
+  const languages = new Languages();
+  await languages.fetch();
+  const engLang = languages.getLanguage("English");
 
   const coll = new Collector(); // Get all the paths etc from commandline
   await coll.connect();
@@ -66,8 +71,8 @@ async function main() {
 
   var workbook = await XLSX.readFile(coll.excelPath, {cellDates: true});
   var bibsheet = workbook.Sheets[workbook.SheetNames[1]];
-
   const bibData = XLSX.utils.sheet_to_json(bibsheet, {raw: false});
+
   // Decode publications
   const citedNames = {};
   for (const pub of bibData) {
@@ -83,13 +88,15 @@ async function main() {
         wordCount: pub["Words CEEA"],
         "@id": generateArcpId(coll.namespace, "work", `${authorName}${pub.Date}`)
       }
+      work.language = engLang;
       corpusCrate.addItem(work);
       citedNames[authorName] = work;
+
       //console.log(work["@id"], corpusCrate.getItem(work["@id"]))
     }
   }
   //console.log(citedNames);
-
+  
   var worksheet = workbook.Sheets[workbook.SheetNames[0]];
 
   const data = XLSX.utils.sheet_to_json(worksheet, {raw: false, range: 1});
@@ -135,22 +142,15 @@ async function main() {
     }
 
     const authorProxy = JSON.parse(JSON.stringify(author));
+    authorProxy["@type"] = ["PersonSnapshot"];
     authorProxy["@id"] = `${authorProxy["@id"]}-${input.Nr}-status`;
     authorProxy.name = `${input.Name} - status ${date} text #${input.Nr}`;
     authorProxy["age"] = input.Age;
-    authorProxy["sameAs"] = {"@id": author["@id"]};
+    authorProxy["person"] = {"@id": author["@id"]};
     authorProxy.class = {"@id": `#class_${input["Status_1"]}`};
-
     // TODO - Addressees
 
-    const file = {
-      "@id": `data/${input.Nr}.txt`,
-      "@type": "File"
-    }
-    const plain = {
-      "@id": `data/${input.Nr}-plain.txt`,
-      "@type": ["File", "OrthographicText"]
-    }
+ 
     // TODO - sort out citations for federation debates
 
     var citedId = generateArcpId(coll.namespace, "work", input.Source.replace(", ", "").replace(/ /g, "_"))
@@ -165,24 +165,26 @@ async function main() {
     }
     const citationStubId = `${citedId}p${input.Pages}`;
 
-    const item = {
-      "@id": id,
-      "@type": ["RepositoryObject", "OrthographicText"],
-      "name": `Text ${input.Nr} ${date} ${author.name}`,
-      "author": {"@id": authorProxy["@id"]},
-      "dateCreated": date,
-      "register": {"@id": `#register_${input.Register}`},
-      "hasFile": [file, plain],
-      "citation": {"@id": citationStubId}
-    };
-
     const citationStub = {
-      "@type": "Article",
+      "@type": "PrimaryText", 
       "partOf": {"@id": citedId},
       "name": input.Source,
       "@id": citationStubId,
       "wordCount": input["# of words"]
     };
+
+    const item = {
+      "@id": id,
+      "@type": ["RepositoryObject"],
+      "name": `Text ${input.Nr} ${date} ${author.name}`,
+      "author": {"@id": authorProxy["@id"]},
+      "dateCreated": date,
+      "register": {"@id": `#register_${input.Register}`},
+      "citation": citationStub,
+      "modality": vocab.getVocabItem("Orthography")
+    };
+
+
 
     if (input.Pages != "x") {
       const pages = input.Pages.split("-");
@@ -199,19 +201,35 @@ async function main() {
       citationStub.name += ` p${input.Pages}`;
     }
 
-    corpusCrate.addItem(item);
-    corpusCrate.addItem(citationStub);
-    corpusCrate.addItem(file);
-    corpusCrate.addItem(plain);
+    const file = {
+      "name": `${item.name} - text with metadata codes`,
+      "@id": `data/${input.Nr}.txt`,
+      "@type": ["File", "DerivedText"],
+      "modality": vocab.getVocabItem("Orthography"),
+      "annotationOf": citationStub,
+      "fileOf": item
+    }
 
-    corpusRoot.hasPart.push(file);
-    corpusRoot.hasPart.push(plain);
+    const plain = {
+      "name": `${item.name} - text`,
+      "@id": `data/${input.Nr}-plain.txt`,
+      "@type": ["File", "DerivedText"],
+      "annotationOf": citationStub,
+      "modality": vocab.getVocabItem("Orthography"),
+      "fileOf": item
+    }
+    item.indexableText = plain;
+    item.hasFile = [plain, file],
 
-    corpusCrate.addItem(author);
-    corpusCrate.addItem(authorProxy);
+    corpusCrate.pushValue(corpusRoot, "hasPart", file);
+    corpusCrate.pushValue(corpusRoot, "hasPart", plain);
+
+
+    //corpusCrate.addItem(author);
+    //corpusCrate.addItem(authorProxy);
 
     //corpusRoot.hasMember.push({"@id": item["@id"]});
-    corpusCrate.pushValue(corpusRoot, 'hasMember', {"@id": item["@id"]})
+    corpusCrate.pushValue(corpusRoot, 'hasMember', item)
   }
   corpusRoot.hasMember.sort((a, b) => (
     a["@id"].localeCompare(b["@id"]))
