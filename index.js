@@ -207,7 +207,6 @@ async function main() {
       "@type": ["File", "DerivedText"],
       "modality": vocab.getVocabItem("Orthography"),
       "annotationOf": citationStub,
-      "fileOf": item,
       "language": engLang
     }
 
@@ -217,14 +216,13 @@ async function main() {
       "@type": ["File", "DerivedText"],
       "annotationOf": citationStub,
       "modality": vocab.getVocabItem("Orthography"),
-      "fileOf": item,
       "language": engLang
 
     }
     item.language = engLang;
 
     item.indexableText = plain;
-    item.hasFile = [plain, file],
+    item.hasPart = [plain, file],
 
     corpusCrate.pushValue(corpusRoot, "hasPart", file);
     corpusCrate.pushValue(corpusRoot, "hasPart", plain);
