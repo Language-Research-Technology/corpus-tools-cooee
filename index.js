@@ -96,7 +96,7 @@ async function main() {
     }
   }
   //console.log(citedNames);
-  
+
   var worksheet = workbook.Sheets[workbook.SheetNames[0]];
 
   const data = XLSX.utils.sheet_to_json(worksheet, {raw: false, range: 1});
@@ -150,7 +150,7 @@ async function main() {
     authorProxy.class = {"@id": `#class_${input["Status_1"]}`};
     // TODO - Addressees
 
- 
+
     // TODO - sort out citations for federation debates
 
     var citedId = generateArcpId(coll.namespace, "work", input.Source.replace(", ", "").replace(/ /g, "_"))
@@ -166,7 +166,7 @@ async function main() {
     const citationStubId = `${citedId}p${input.Pages}`;
 
     const citationStub = {
-      "@type": "PrimaryText", 
+      "@type": "PrimaryText",
       "partOf": {"@id": citedId},
       "name": input.Source,
       "@id": citationStubId,
@@ -180,10 +180,10 @@ async function main() {
       "author": {"@id": authorProxy["@id"]},
       "dateCreated": date,
       "register": {"@id": `#register_${input.Register}`},
+      "linguisticGenre": {"@id": `#register_${input.Register}`},
       "citation": citationStub,
       "modality": vocab.getVocabItem("Orthography")
     };
-
 
 
     if (input.Pages != "x") {
@@ -208,7 +208,8 @@ async function main() {
       "modality": vocab.getVocabItem("Orthography"),
       "annotationOf": citationStub,
       "fileOf": item,
-      "language": engLang
+      "language": engLang,
+      "encodingFormat": "text/csv"
     }
 
     const plain = {
@@ -218,13 +219,13 @@ async function main() {
       "annotationOf": citationStub,
       "modality": vocab.getVocabItem("Orthography"),
       "fileOf": item,
-      "language": engLang
-
+      "language": engLang,
+      "encodingFormat": "text/csv"
     }
     item.language = engLang;
 
     item.indexableText = plain;
-    item.hasFile = [plain, file],
+    item.hasFile = [plain, file];
 
     corpusCrate.pushValue(corpusRoot, "hasPart", file);
     corpusCrate.pushValue(corpusRoot, "hasPart", plain);
