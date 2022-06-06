@@ -223,7 +223,7 @@ async function main() {
     item.language = engLang;
 
     item.indexableText = plain;
-    item.hasPart = [plain, file],
+    item.hasPart = [plain, file];
 
     corpusCrate.pushValue(corpusRoot, "hasPart", file);
     corpusCrate.pushValue(corpusRoot, "hasPart", plain);
