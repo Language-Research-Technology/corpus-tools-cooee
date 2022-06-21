@@ -45,10 +45,18 @@
           "@id": "data"
         }
       ],
-      "license": "CC BY 4.0",
+      "license": {
+        "@id" : "https://creativecommons.org/licenses/by/4.0/"
+      },
       "name": "A COrpus of Oz Early English (COOEE)",
       "temporalCoverage": "1788-1900",
       "hasFile": []
+    },
+    {
+      "@id": "https://creativecommons.org/licenses/by/4.0/",
+      "name": "Attribution 4.0 International (CC BY 4.0)",
+      "description": "You are free to: Share - copy and redistribute the material in any medium or format - Adapt - remix, transform, and build upon the material for any purpose, even commercially.",
+      "@type": "CreativeWork"
     },
     {
       "@id": "3-COOEE-4.doc",
