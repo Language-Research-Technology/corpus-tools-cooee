@@ -1,7 +1,7 @@
 const {Collector, generateArcpId} = require("oni-ocfl");
 const {languageProfileURI, Languages, Vocab} = require("language-data-node-tools");
 const XLSX = require('xlsx');
-console.log(Vocab)
+
 const extraContext = {
   "register": "http://w3id.org/meta-share/meta-share/register"
 }
@@ -176,6 +176,7 @@ async function main() {
     const item = {
       "@id": id,
       "@type": ["RepositoryObject"],
+      "conformsTo": {"@id": languageProfileURI("Object")},
       "name": `Text ${input.Nr} ${date} ${author.name}`,
       "author": {"@id": authorProxy["@id"]},
       "dateCreated": date,
