@@ -8,13 +8,6 @@ Then install
 ```
 npm install
 ```
-Then add language-data-node-tools
-
-Assuming you have [this](https://github.com/Language-Research-Technology/language-data-node-tools) checked out and done npm link inside its directory
-
-```
-npm link language-data-node-tools ro-crate oni-ocfl
-```
 
 ## Usage 
 
