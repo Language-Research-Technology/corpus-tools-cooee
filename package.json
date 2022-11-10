@@ -20,7 +20,7 @@
     "commander": "^8.1.0",
     "exceljs": "^4.3.0",
     "fs-extra": "^10.0.0",
-    "language-data-node-tools": "github:Language-Research-Technology/language-data-node-tools",
+    "language-data-commons-vocabs": "github:Language-Research-Technology/language-data-commons-vocabs",
     "oni-ocfl": "github:Arkisto-Platform/oni-ocfl",
     "xlsx": "^0.17.3"
   }

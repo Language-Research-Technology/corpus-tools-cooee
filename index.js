@@ -1,5 +1,5 @@
 const {Collector, generateArcpId} = require("oni-ocfl");
-const {languageProfileURI, Languages, Vocab} = require("language-data-node-tools");
+const {languageProfileURI, Languages, Vocab} = require("language-data-commons-vocabs");
 const XLSX = require('xlsx');
 
 const extraContext = {
