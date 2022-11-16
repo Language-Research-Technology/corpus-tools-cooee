@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/Language-Research-Technology/corpus-tools-cooee#readme",
   "dependencies": {
+    "@describo/data-packs": "^0.8.0",
     "commander": "^8.1.0",
     "exceljs": "^4.3.0",
     "fs-extra": "^10.0.0",

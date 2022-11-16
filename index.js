@@ -1,6 +1,7 @@
 const {Collector, generateArcpId} = require("oni-ocfl");
 const {languageProfileURI, Languages, Vocab} = require("language-data-commons-vocabs");
 const XLSX = require('xlsx');
+const { DataPack } = require('@describo/data-packs');
 
 const extraContext = {
   "register": "http://w3id.org/meta-share/meta-share/register"
@@ -45,10 +46,12 @@ const registers = [
 async function main() {
   const vocab = new Vocab;
   await vocab.load();
-  const languages = new Languages();
-  await languages.fetch();
-  const engLang = languages.getLanguage("English");
-
+  let datapack = new DataPack({ dataPacks: ['Glottolog'], indexFields: ['name']});
+  await datapack.load();
+  let engLang = datapack.get({
+    field: "name",
+    value: "English",
+  });
   const coll = new Collector(); // Get all the paths etc from commandline
   await coll.connect();
   // Make a base corpus using template
@@ -166,7 +169,7 @@ async function main() {
     const citationStubId = `${citedId}p${input.Pages}`;
 
     const citationStub = {
-      "@type": "PrimaryText",
+      "@type": "PrimaryMaterial",
       "partOf": {"@id": citedId},
       "name": input.Source,
       "@id": citationStubId,
@@ -183,7 +186,7 @@ async function main() {
       "register": {"@id": `#register_${input.Register}`},
       "linguisticGenre": {"@id": `#register_${input.Register}`},
       "citation": citationStub,
-      "modality": vocab.getVocabItem("Orthography")
+      "modality": vocab.getVocabItem("WrittenLanguage")
     };
 
 
@@ -205,8 +208,8 @@ async function main() {
     const file = {
       "name": `${item.name} - text with metadata codes`,
       "@id": `data/${input.Nr}.txt`,
-      "@type": ["File", "DerivedText"],
-      "modality": vocab.getVocabItem("Orthography"),
+      "@type": ["File", "DerivedMaterial"],
+      "modality": vocab.getVocabItem("WrittenLanguage"),
       "annotationOf": citationStub,
       "language": engLang,
       "encodingFormat": "text/plain"
@@ -215,9 +218,9 @@ async function main() {
     const plain = {
       "name": `${item.name} - text`,
       "@id": `data/${input.Nr}-plain.txt`,
-      "@type": ["File", "DerivedText"],
+      "@type": ["File", "DerivedMaterial"],
       "annotationOf": citationStub,
-      "modality": vocab.getVocabItem("Orthography"),
+      "modality": vocab.getVocabItem("WrittenLanguage"),
       "language": engLang,
       "encodingFormat": "text/plain"
     }
