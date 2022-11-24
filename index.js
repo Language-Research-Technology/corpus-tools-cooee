@@ -181,7 +181,7 @@ async function main() {
       "@type": ["RepositoryObject"],
       "conformsTo": {"@id": languageProfileURI("Object")},
       "name": `Text ${input.Nr} ${date} ${author.name}`,
-      "author": {"@id": authorProxy["@id"]},
+      "author": authorProxy,
       "dateCreated": date,
       "register": {"@id": `#register_${input.Register}`},
       "linguisticGenre": {"@id": `#register_${input.Register}`},
