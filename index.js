@@ -188,8 +188,14 @@ async function main() {
       "register": {"@id": `#register_${input.Register}`},
       "linguisticGenre": {"@id": `#register_${input.Register}`},
       "citation": citationStub,
-      "modality": vocab.getVocabItem("WrittenLanguage")
     };
+
+    if (item.register["@id"] === "#register_SB")  {
+      item.modality = vocab.getVocabItem("SpokenLanguage")
+    } else {
+      item.modality = vocab.getVocabItem("WrittenLanguage")
+
+    }
 
 
     if (input.Pages != "x") {
