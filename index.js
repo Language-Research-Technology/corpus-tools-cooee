@@ -62,6 +62,8 @@ async function main() {
   // TODO need some tools for all this
   corpusCrate.addContext(extraContext);
 
+  dataDir = corpusCrate.getItem("data/");
+
   corpusCrate.addProfile(languageProfileURI("Collection"));
   const corpusRoot = corpus.rootDataset;
   corpus.mintArcpId("corpus", "root");
@@ -149,7 +151,7 @@ async function main() {
     authorProxy["@id"] = `${authorProxy["@id"]}-${input.Nr}-status`;
     authorProxy.name = `${input.Name} - status ${date} text #${input.Nr}`;
     authorProxy["age"] = input.Age;
-    authorProxy["person"] = {"@id": author["@id"]};
+    authorProxy["person"] = author;
     authorProxy.class = {"@id": `#class_${input["Status_1"]}`};
     // TODO - Addressees
 
