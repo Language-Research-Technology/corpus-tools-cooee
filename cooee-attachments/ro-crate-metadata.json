@@ -10,149 +10,6 @@
   ],
   "@graph": [
     {
-      "@id": "./",
-      "@type": "Dataset",
-      "author": {
-        "@id": "https://www.peterlang.com/search?f_0=author&q_0=Clemens+W.+A.+Fritz"
-      },
-      "citation": {
-        "@id": "https://doi.org/10.3726/978-3-653-01830-1"
-      },
-      "description": "Material to be included had to meet with a regional and a temporal criterion. The latter required texts to have been produced between 1788 and 1900 in order to become eligible for COOEE. It was mandatory for a text to have been written in Australia, New Zealand or Norfolk Island. But in a few cases, other localities were allowed. For example, if a person who was a native Australian or who had lived in Australia for a considerable time, wrote a shipboard diary or travelled in other countries. Contains: Letters, published materials in book form, historical texts",
-      "hasPart": [
-        {
-          "@id": "3-COOEE-4.doc"
-        },
-        {
-          "@id": "COOEE contents.XLS"
-        },
-        {
-          "@id": "COOEE.XLS"
-        },
-        {
-          "@id": "COOEE_contents.xlsx"
-        },
-        {
-          "@id": "COOEE_contents_original.xlsx"
-        }
-      ],
-      "license": {
-        "@id" : "https://creativecommons.org/licenses/by/4.0/"
-      },
-      "name": "A COrpus of Oz Early English (COOEE)",
-      "temporalCoverage": "1788-1900",
-      "hasFile": []
-    },
-    {
-      "@id": "https://creativecommons.org/licenses/by/4.0/",
-      "@type": "OrganizationReuseLicense",
-      "metadataIsPublic": true,
-      "allowTextIndex": true,
-      "name": "Attribution 4.0 International (CC BY 4.0)",
-      "description": "You are free to: Share - copy and redistribute the material in any medium or format - Adapt - remix, transform, and build upon the material for any purpose, even commercially."
-    },
-    {
-      "@id": "3-COOEE-4.doc",
-      "@type": "File",
-      "contentSize": 113152,
-      "dateModified": "2021-11-10T11:16:31+11:00",
-      "description": "Describes the collection methodology and sources",
-      "encodingFormat": [
-        {
-          "@id": "https://www.nationalarchives.gov.uk/PRONOM/fmt/40"
-        },
-        "application/msword"
-      ],
-      "name": "A COrpus of Oz Early English (COOEE)"
-    },
-    {
-      "@id": "COOEE contents.XLS",
-      "@type": "File",
-      "contentSize": 544768,
-      "dateModified": "2021-11-10T11:16:31+11:00",
-      "description": "Manifest / catalogue of the corpus with a single worksheet listing the texts, one for codes and one for the biliography",
-      "encodingFormat": [
-        {
-          "@id": "https://www.nationalarchives.gov.uk/PRONOM/fmt/61"
-        },
-        "application/vnd.ms-excel"
-      ],
-      "name": "COOEE contents.XLS"
-    },
-    {
-      "@id": "COOEE.XLS",
-      "@type": "File",
-      "contentSize": 1789440,
-      "dateModified": "2021-11-10T11:16:31+11:00",
-      "description": "Manifest / catalogue of the corpus with multiple worksheeets",
-      "encodingFormat": [
-        {
-          "@id": "https://www.nationalarchives.gov.uk/PRONOM/fmt/61"
-        },
-        "application/vnd.ms-excel"
-      ],
-      "name": "COOEE.XLS"
-    },
-    {
-      "@id": "COOEE_contents.xlsx",
-      "@type": "File",
-      "contentSize": 190263,
-      "dateModified": "2021-11-13T12:10:41+11:00",
-      "encodingFormat": [
-        {
-          "@id": "https://www.nationalarchives.gov.uk/PRONOM/fmt/214"
-        },
-        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-      ],
-      "name": "COOEE_contents.xlsx"
-    },
-    {
-      "@id": "COOEE_contents_original.xlsx",
-      "@type": "File",
-      "contentSize": 190095,
-      "dateModified": "2021-11-10T14:43:11+11:00",
-      "encodingFormat": [
-        {
-          "@id": "https://www.nationalarchives.gov.uk/PRONOM/fmt/214"
-        },
-        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-      ],
-      "name": "COOEE_contents_original.xlsx"
-    },
-
-    {
-      "@id": "https://doi.org/10.3726/978-3-653-01830-1",
-      "@type": "Book",
-      "datePublished": "2012",
-      "name": "From English in Australia to Australian English",
-      "publisher": "Peter Lang"
-    },
-    {
-      "@id": "https://www.nationalarchives.gov.uk/PRONOM/fmt/214",
-      "@type": "website",
-      "name": "Microsoft Excel for Windows"
-    },
-    {
-      "@id": "https://www.nationalarchives.gov.uk/PRONOM/fmt/40",
-      "@type": "website",
-      "name": "Microsoft Word Document"
-    },
-    {
-      "@id": "https://www.nationalarchives.gov.uk/PRONOM/fmt/61",
-      "@type": "website",
-      "name": "Microsoft Excel 97 Workbook (xls)"
-    },
-    {
-      "@id": "https://www.nationalarchives.gov.uk/PRONOM/undefined",
-      "@type": "website",
-      "name": "Microsoft Word Document"
-    },
-    {
-      "@id": "https://www.peterlang.com/search?f_0=author&q_0=Clemens+W.+A.+Fritz",
-      "@type": "Person",
-      "name": "Clemens W. A. Fritz"
-    },
-    {
       "@id": "ro-crate-metadata.json",
       "@type": "CreativeWork",
       "conformsTo": {
@@ -161,7 +18,263 @@
       "about": {
         "@id": "./"
       },
-      "identifier": "ro-crate-metadata.json"
+      "identifier": [
+        "ro-crate-metadata.json",
+        {
+          "@id": "#:localid:describo:e2a0e556-6163-43da-85aa-9f178bf092a0"
+        }
+      ]
+    },
+    {
+      "@id": "./",
+      "@type": "Dataset",
+      "name": "A COrpus of Oz Early English (COOEE)",
+      "temporalCoverage": [
+        "1788-1900"
+      ],
+      "description": [
+        "Material to be included had to meet with a regional and a temporal criterion. The latter required texts to have been produced between 1788 and 1900 in order to become eligible for COOEE. It was mandatory for a text to have been written in Australia, New Zealand or Norfolk Island. But in a few cases, other localities were allowed. For example, if a person who was a native Australian or who had lived in Australia for a considerable time, wrote a shipboard diary or travelled in other countries.\nContains: Letters, published materials in book form, historical texts. The collection is stratified in two ways:\n\nTime period - The corpus is divided into four time periods:\n\nPeriod 1: 1788-1825\nPeriod 2: 1826-1850\nPeriod 3: 1851-1875\nPeriod 4: 1876-1900\n\nThe initial numeral of each file name indicates the period from which the document comes.\nRegister - The corpus contains material from four registers:\nSpeech-based (sb)\nPrivate written (prw)\nPublic written (pcw)\nGovernment English (ge)\nThe register to which a file belongs is specified in the metadata at the start of each file in the form <r=[register]> using the abbreviations above."
+      ],
+      "author": [
+        {
+          "@id": "https://www.peterlang.com/search?f_0=author&q_0=Clemens+W.+A.+Fritz"
+        }
+      ],
+      "citation": [
+        {
+          "@id": "https://doi.org/10.3726/978-3-653-01830-1"
+        }
+      ],
+      "hasPart": [
+        {
+          "@id": "#3-COOEE-4.doc"
+        },
+        {
+          "@id": "#COOEE%20contents.XLS"
+        },
+        {
+          "@id": "#COOEE.XLS"
+        },
+        {
+          "@id": "#COOEE_contents.xlsx"
+        },
+        {
+          "@id": "#COOEE_contents_original.xlsx"
+        }
+      ],
+      "license": [
+        {
+          "@id": "https://creativecommons.org/licenses/by/4.0/"
+        }
+      ],
+      "@reverse": {}
+    },
+    {
+      "@id": "#3-COOEE-4.doc",
+      "@type": "File",
+      "name": "A COrpus of Oz Early English (COOEE)",
+      "dateModified": [
+        "2021-11-10T11:16:31+11:00"
+      ],
+      "description": [
+        "Describes the collection methodology and sources"
+      ],
+      "encodingFormat": [
+        "application/msword",
+        {
+          "@id": "https://www.nationalarchives.gov.uk/PRONOM/fmt/40"
+        }
+      ],
+      "@reverse": {
+        "hasPart": [
+          {
+            "@id": "./"
+          }
+        ]
+      }
+    },
+    {
+      "@id": "https://creativecommons.org/licenses/by/4.0/",
+      "@type": "OrganizationReuseLicense",
+      "name": "Attribution 4.0 International (CC BY 4.0)",
+      "description": [
+        "You are free to: Share - copy and redistribute the material in any medium or format - Adapt - remix, transform, and build upon the material for any purpose, even commercially."
+      ],
+      "@reverse": {
+        "license": [
+          {
+            "@id": "./"
+          }
+        ]
+      }
+    },
+    {
+      "@id": "#COOEE%20contents.XLS",
+      "@type": "File",
+      "name": "COOEE contents.XLS",
+      "dateModified": [
+        "2021-11-10T11:16:31+11:00"
+      ],
+      "description": [
+        "Manifest / catalogue of the corpus with a single worksheet listing the texts, one for codes and one for the biliography"
+      ],
+      "encodingFormat": [
+        "application/vnd.ms-excel",
+        {
+          "@id": "https://www.nationalarchives.gov.uk/PRONOM/fmt/61"
+        }
+      ],
+      "@reverse": {
+        "hasPart": [
+          {
+            "@id": "./"
+          }
+        ]
+      }
+    },
+    {
+      "@id": "#COOEE.XLS",
+      "@type": "File",
+      "name": "COOEE.XLS",
+      "dateModified": [
+        "2021-11-10T11:16:31+11:00"
+      ],
+      "description": [
+        "Manifest / catalogue of the corpus with multiple worksheeets"
+      ],
+      "encodingFormat": [
+        "application/vnd.ms-excel",
+        {
+          "@id": "https://www.nationalarchives.gov.uk/PRONOM/fmt/61"
+        }
+      ],
+      "@reverse": {
+        "hasPart": [
+          {
+            "@id": "./"
+          }
+        ]
+      }
+    },
+    {
+      "@id": "#COOEE_contents.xlsx",
+      "@type": "File",
+      "name": "COOEE_contents.xlsx",
+      "dateModified": [
+        "2021-11-13T12:10:41+11:00"
+      ],
+      "encodingFormat": [
+        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        {
+          "@id": "https://www.nationalarchives.gov.uk/PRONOM/fmt/214"
+        }
+      ],
+      "@reverse": {
+        "hasPart": [
+          {
+            "@id": "./"
+          }
+        ]
+      }
+    },
+    {
+      "@id": "#COOEE_contents_original.xlsx",
+      "@type": "File",
+      "name": "COOEE_contents_original.xlsx",
+      "dateModified": [
+        "2021-11-10T14:43:11+11:00"
+      ],
+      "encodingFormat": [
+        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        {
+          "@id": "https://www.nationalarchives.gov.uk/PRONOM/fmt/214"
+        }
+      ],
+      "@reverse": {
+        "hasPart": [
+          {
+            "@id": "./"
+          }
+        ]
+      }
+    },
+    {
+      "@id": "https://www.peterlang.com/search?f_0=author&q_0=Clemens+W.+A.+Fritz",
+      "@type": "Person",
+      "name": "Clemens W. A. Fritz",
+      "@reverse": {
+        "author": [
+          {
+            "@id": "./"
+          }
+        ]
+      }
+    },
+    {
+      "@id": "https://doi.org/10.3726/978-3-653-01830-1",
+      "@type": "Book",
+      "name": "From English in Australia to Australian English",
+      "datePublished": [
+        "2012"
+      ],
+      "publisher": [
+        "Peter Lang"
+      ],
+      "@reverse": {
+        "citation": [
+          {
+            "@id": "./"
+          }
+        ]
+      }
+    },
+    {
+      "@id": "https://www.nationalarchives.gov.uk/PRONOM/fmt/61",
+      "@type": "website",
+      "name": "Microsoft Excel 97 Workbook (xls)",
+      "@reverse": {
+        "encodingFormat": [
+          {
+            "@id": "#COOEE%20contents.XLS"
+          },
+          {
+            "@id": "#COOEE.XLS"
+          }
+        ]
+      }
+    },
+    {
+      "@id": "https://www.nationalarchives.gov.uk/PRONOM/fmt/214",
+      "@type": "website",
+      "name": "Microsoft Excel for Windows",
+      "@reverse": {
+        "encodingFormat": [
+          {
+            "@id": "#COOEE_contents.xlsx"
+          },
+          {
+            "@id": "#COOEE_contents_original.xlsx"
+          }
+        ]
+      }
+    },
+    {
+      "@id": "https://www.nationalarchives.gov.uk/PRONOM/fmt/40",
+      "@type": "website",
+      "name": "Microsoft Word Document",
+      "@reverse": {
+        "encodingFormat": [
+          {
+            "@id": "#3-COOEE-4.doc"
+          }
+        ]
+      }
+    },
+    {
+      "@id": "https://www.nationalarchives.gov.uk/PRONOM/undefined",
+      "@type": "website",
+      "name": "Microsoft Word Document",
+      "@reverse": {}
     }
   ]
 }
