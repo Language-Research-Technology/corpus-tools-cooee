@@ -66,7 +66,7 @@ async function main() {
   corpusCrate.addProfile(languageProfileURI("Collection"));
   const corpusRoot = corpus.rootDataset;
   corpusRoot["@type"] = ["Dataset", "RepositoryCollection"];
-  corpus.mintArcpId("corpus", "root");
+  corpus.mintArcpId();
   for (let register of registers) {
     corpusCrate.addItem(register);
   }
