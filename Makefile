@@ -9,7 +9,7 @@ REPO_OUT_DIR=./ocfl-repo
 BASE_TEMP_DIR=temp
 
 REPO_NAME=ATAP
-NAMESPACE=cooee-corpus
+NAMESPACE=corpus-of-oz-early-english
 TEMP_DIR=${BASE_TEMP_DIR}
 
 .DEFAULT_GOAL := repo
