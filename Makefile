@@ -8,7 +8,7 @@ REPO_SCRATCH_DIR=scratch
 REPO_OUT_DIR=./ocfl-repo
 BASE_TEMP_DIR=temp
 
-REPO_NAME=ATAP
+REPO_NAME=LDaCA
 NAMESPACE=corpus-of-oz-early-english
 TEMP_DIR=${BASE_TEMP_DIR}
 
