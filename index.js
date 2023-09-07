@@ -188,14 +188,15 @@ async function main() {
       "register": {"@id": `#register_${input.Register}`},
       "linguisticGenre": {"@id": `#register_${input.Register}`},
       "citation": citationStub,
+      "modality": vocab.getVocabItem("WrittenLanguage")
     };
-
+/*
     if (item.register["@id"] === "#register_SB")  {
       item.modality = vocab.getVocabItem("SpokenLanguage")
     } else {
       item.modality = vocab.getVocabItem("WrittenLanguage")
 
-    }
+    }*/
 
 
     if (input.Pages != "x") {
@@ -233,13 +234,13 @@ async function main() {
       "encodingFormat": "text/plain"
     }
 
-    if (item.register["@id"] === "#register_SB")  {
+    /*if (item.register["@id"] === "#register_SB")  {
       file.modality = vocab.getVocabItem("SpokenLanguage");
       plain.modality = vocab.getVocabItem("SpokenLanguage");
     } else {
       file.modality = vocab.getVocabItem("WrittenLanguage")
       plain.modality = vocab.getVocabItem("WrittenLanguage")
-    }
+    }*/
 
     item.language = engLang;
 
