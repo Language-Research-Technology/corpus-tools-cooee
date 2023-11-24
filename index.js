@@ -93,7 +93,7 @@ async function main() {
         wordCount: pub["Words CEEA"],
         "@id": generateArcpId(coll.namespace, "work", `${authorName}${pub.Date}`)
       }
-      work.language = engLang;
+      work.inLanguage = engLang;
       corpusCrate.addItem(work);
       citedNames[authorName] = work;
 
@@ -222,7 +222,7 @@ async function main() {
       "materialType": vocab.getVocabItem("DerivedMaterial"),
       "communicationMode": vocab.getVocabItem("WrittenLanguage"),
       "annotationOf": citationStub,
-      "language": engLang,
+      "inLanguage": engLang,
       "encodingFormat": "text/plain"
     }
 
@@ -233,7 +233,7 @@ async function main() {
       "materialType": vocab.getVocabItem("DerivedMaterial"),
       "annotationOf": citationStub,
       "communicationMode": vocab.getVocabItem("WrittenLanguage"),
-      "language": engLang,
+      "inLanguage": engLang,
       "encodingFormat": "text/plain"
     }
 
@@ -245,7 +245,7 @@ async function main() {
       plain.communicationMode = vocab.getVocabItem("WrittenLanguage")
     }*/
 
-    item.language = engLang;
+    item.inLanguage = engLang;
 
     item.indexableText = plain;
     item.hasPart = [plain, file];
