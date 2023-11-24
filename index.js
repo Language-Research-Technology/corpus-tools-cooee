@@ -153,6 +153,7 @@ async function main() {
     authorProxy["age"] = input.Age;
     authorProxy["person"] = author;
     authorProxy.class = {"@id": `#class_${input["Status_1"]}`};
+    authorProxy["prov:specializationOf"] = author["@id"];
     // TODO - Addressees
 
 
@@ -188,13 +189,13 @@ async function main() {
       "register": {"@id": `#register_${input.Register}`},
       "linguisticGenre": {"@id": `#register_${input.Register}`},
       "citation": citationStub,
-      "modality": vocab.getVocabItem("WrittenLanguage")
+      "communicationMode": vocab.getVocabItem("WrittenLanguage")
     };
 /*
     if (item.register["@id"] === "#register_SB")  {
-      item.modality = vocab.getVocabItem("SpokenLanguage")
+      item.communicationMode = vocab.getVocabItem("SpokenLanguage")
     } else {
-      item.modality = vocab.getVocabItem("WrittenLanguage")
+      item.communicationMode = vocab.getVocabItem("WrittenLanguage")
 
     }*/
 
@@ -217,8 +218,9 @@ async function main() {
     const file = {
       "name": `${item.name} - text with metadata codes`,
       "@id": `data/${input.Nr}.txt`,
-      "@type": ["File", "DerivedMaterial"],
-      "modality": vocab.getVocabItem("WrittenLanguage"),
+      "@type": ["File"],
+      "materialType": vocab.getVocabItem("DerivedMaterial"),
+      "communicationMode": vocab.getVocabItem("WrittenLanguage"),
       "annotationOf": citationStub,
       "language": engLang,
       "encodingFormat": "text/plain"
@@ -227,19 +229,20 @@ async function main() {
     const plain = {
       "name": `${item.name} - text`,
       "@id": `data/${input.Nr}-plain.txt`,
-      "@type": ["File", "DerivedMaterial"],
+      "@type": ["File"],
+      "materialType": vocab.getVocabItem("DerivedMaterial"),
       "annotationOf": citationStub,
-      "modality": vocab.getVocabItem("WrittenLanguage"),
+      "communicationMode": vocab.getVocabItem("WrittenLanguage"),
       "language": engLang,
       "encodingFormat": "text/plain"
     }
 
     /*if (item.register["@id"] === "#register_SB")  {
-      file.modality = vocab.getVocabItem("SpokenLanguage");
-      plain.modality = vocab.getVocabItem("SpokenLanguage");
+      file.communicationMode = vocab.getVocabItem("SpokenLanguage");
+      plain.communicationMode = vocab.getVocabItem("SpokenLanguage");
     } else {
-      file.modality = vocab.getVocabItem("WrittenLanguage")
-      plain.modality = vocab.getVocabItem("WrittenLanguage")
+      file.communicationMode = vocab.getVocabItem("WrittenLanguage")
+      plain.communicationMode = vocab.getVocabItem("WrittenLanguage")
     }*/
 
     item.language = engLang;
