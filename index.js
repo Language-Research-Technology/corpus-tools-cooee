@@ -172,7 +172,8 @@ async function main() {
     const citationStubId = `${citedId}p${input.Pages}`;
 
     const citationStub = {
-      "@type": "PrimaryMaterial",
+      "@type": "CreativeWork",
+      "materialType":vocab.getVocabItem("PrimaryMaterial"),
       "partOf": {"@id": citedId},
       "name": input.Source,
       "@id": citationStubId,

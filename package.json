@@ -21,7 +21,7 @@
     "commander": "^8.1.0",
     "exceljs": "^4.3.0",
     "fs-extra": "^10.0.0",
-    "language-data-commons-vocabs": "github:Language-Research-Technology/language-data-commons-vocabs",
+    "language-data-commons-vocabs": "github:Language-Research-Technology/language-data-commons-vocabs#great-metadata-migration",
     "oni-ocfl": "github:Arkisto-Platform/oni-ocfl",
     "xlsx": "^0.17.3"
   }
