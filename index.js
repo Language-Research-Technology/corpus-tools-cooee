@@ -147,7 +147,7 @@ async function main() {
     }
 
     const authorProxy = JSON.parse(JSON.stringify(author));
-    authorProxy["@type"] = ["PersonSnapshot"];
+    authorProxy["@type"] = ["Person"];
     authorProxy["@id"] = `${authorProxy["@id"]}-${input.Nr}-status`;
     authorProxy.name = `${input.Name} - status ${date} text #${input.Nr}`;
     authorProxy["age"] = input.Age;
@@ -174,7 +174,7 @@ async function main() {
     const citationStub = {
       "@type": "CreativeWork",
       "materialType":vocab.getVocabItem("PrimaryMaterial"),
-      "partOf": {"@id": citedId},
+      "isPartOf": {"@id": citedId},
       "name": input.Source,
       "@id": citationStubId,
       "wordCount": input["# of words"]
