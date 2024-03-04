@@ -17,12 +17,12 @@
   },
   "homepage": "https://github.com/Language-Research-Technology/corpus-tools-cooee#readme",
   "dependencies": {
-    "@describo/data-packs": "^0.8.0",
+    "@ldac/data-packs": "github:Language-Research-Technology/data-packs",
     "commander": "^8.1.0",
     "exceljs": "^4.3.0",
     "fs-extra": "^10.0.0",
-    "language-data-commons-vocabs": "github:Language-Research-Technology/language-data-commons-vocabs#great-metadata-migration",
-    "oni-ocfl": "github:Arkisto-Platform/oni-ocfl",
+    "language-data-commons-vocabs": "github:Language-Research-Technology/language-data-commons-vocabs",
+    "oni-ocfl": "github:Language-Research-Technology/oni-ocfl",
     "xlsx": "^0.17.3"
   }
 }
