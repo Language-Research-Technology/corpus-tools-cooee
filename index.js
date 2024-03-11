@@ -56,6 +56,7 @@ async function main() {
   await coll.connect();
   // Make a base corpus using template
   const corpus = coll.newObject(coll.templateCrateDir);
+  coll.namespace = "doi10.26180%2F23961609";
 
   const corpusCrate = corpus.crate;
   // TODO need some tools for all this
