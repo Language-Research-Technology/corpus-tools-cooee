@@ -1,7 +1,7 @@
 const {Collector, generateArcpId} = require("oni-ocfl");
 const {languageProfileURI, Languages, Vocab} = require("language-data-commons-vocabs");
 const XLSX = require('xlsx');
-const { DataPack } = require('@describo/data-packs');
+const { DataPack } = require('@ldac/data-packs');
 
 const extraContext = {
   "register": "http://w3id.org/meta-share/meta-share/register"
