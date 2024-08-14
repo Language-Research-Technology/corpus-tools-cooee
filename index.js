@@ -152,7 +152,7 @@ async function main() {
     authorProxy.name = `${input.Name} - status ${date} text #${input.Nr}`;
     authorProxy["age"] = input.Age;
     authorProxy.class = {"@id": `#class_${input["Status_1"]}`};
-    authorProxy["prov:specializationOf"] = author;
+    authorProxy["prov:specializationOf"] = author["@id"];
     // TODO - Addressees
 
 
