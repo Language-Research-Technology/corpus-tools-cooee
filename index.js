@@ -1,10 +1,11 @@
-const {Collector, generateArcpId} = require("oni-ocfl");
-const {languageProfileURI, Languages, Vocab} = require("language-data-commons-vocabs");
+const { Collector, generateArcpId } = require("oni-ocfl");
+const { languageProfileURI, Languages, Vocab } = require("language-data-commons-vocabs");
 const XLSX = require('xlsx');
 const { DataPack } = require('@ldac/data-packs');
 
 const extraContext = {
-  "register": "http://w3id.org/meta-share/meta-share/register"
+  "register": "http://w3id.org/meta-share/meta-share/register",
+  "TextType": "http://w3id.org/meta-share/meta-share/TextType",
 }
 
 const classes = [
@@ -36,17 +37,71 @@ const classes = [
 
 
 const registers = [
-  {"@id": "#register_SB", "name": "Speech Based", "@type": "DefinedTerm"},
-  {"@id": "#register_PrW", "name": "Private Written", "@type": "DefinedTerm"},
-  {"@id": "#register_PcW", "name": "Public Written", "@type": "DefinedTerm"},
-  {"@id": "#register_GE", "name": "Government English", "@type": "DefinedTerm"}
+  { "@id": "#register_SB", "name": "Speech Based", "@type": "DefinedTerm" },
+  { "@id": "#register_PrW", "name": "Private Written", "@type": "DefinedTerm" },
+  { "@id": "#register_PcW", "name": "Public Written", "@type": "DefinedTerm" },
+  { "@id": "#register_GE", "name": "Government English", "@type": "DefinedTerm" }
 ]
+const textTypes = [
+  { "@id": "#texttype_MI", "name": "Minutes", "@type": "DefinedTerm" },
+  { "@id": "#texttype_PL", "name": "Play", "@type": "DefinedTerm" },
+  { "@id": "#texttype_SP", "name": "Speeches", "@type": "DefinedTerm" },
+  { "@id": "#texttype_DI", "name": "Diaries", "@type": "DefinedTerm" },
+  { "@id": "#texttype_PC", "name": "Private Correspondence", "@type": "DefinedTerm" },
+  { "@id": "#texttype_MM", "name": "Memoirs", "@type": "DefinedTerm" },
+  { "@id": "#texttype_NB", "name": "Newspapers & Broadsides", "@type": "DefinedTerm" },
+  { "@id": "#texttype_NV", "name": "Narratives", "@type": "DefinedTerm" },
+  { "@id": "#texttype_OC", "name": "Official Correspondence", "@type": "DefinedTerm" },
+  { "@id": "#texttype_RP", "name": "Reports", "@type": "DefinedTerm" },
+  { "@id": "#texttype_VE", "name": "Verse", "@type": "DefinedTerm" },
+  { "@id": "#texttype_IC", "name": "Imperial Correspondence", "@type": "DefinedTerm" },
+  { "@id": "#texttype_LG", "name": "Legal English", "@type": "DefinedTerm" },
+  { "@id": "#texttype_PP", "name": "Petitions & Proclamations", "@type": "DefinedTerm" }
+]
+const places = [
+  { "@id": "#place_A", "name": "Australia", "@type": "DefinedTerm" },
+  { "@id": "#place_A-NSW", "name": "New South Wales", "@type": "DefinedTerm" },
+  { "@id": "#place_A-QLD", "name": "Queensland", "@type": "DefinedTerm" },
+  { "@id": "#place_A-NT", "name": "Northern Territory", "@type": "DefinedTerm" },
+  { "@id": "#place_A-SA", "name": "South Australia", "@type": "DefinedTerm" },
+  { "@id": "#place_A-VDL", "name": "Van Diemen's Land", "@type": "DefinedTerm" },
+  { "@id": "#place_A-VIC", "name": "Victoria", "@type": "DefinedTerm" },
+  { "@id": "#place_A-WA", "name": "Western Australia", "@type": "DefinedTerm" },
+  { "@id": "#place_CAN", "name": "Canada", "@type": "DefinedTerm" },
+  { "@id": "#place_GB", "name": "Great Britain", "@type": "DefinedTerm" },
+  { "@id": "#place_GB-E", "name": "England", "@type": "DefinedTerm" },
+  { "@id": "#place_GB-SC", "name": "Scotland", "@type": "DefinedTerm" },
+  { "@id": "#place_GB-W", "name": "Wales", "@type": "DefinedTerm" },
+  { "@id": "#place_India", "name": "India", "@type": "DefinedTerm" },
+  { "@id": "#place_NI", "name": "Northern Ireland", "@type": "DefinedTerm" },
+  { "@id": "#place_NZ", "name": "New Zealand", "@type": "DefinedTerm" },
+  { "@id": "#place_SA", "name": "South Africa", "@type": "DefinedTerm" },
+  { "@id": "#place_SI", "name": "Southern Ireland", "@type": "DefinedTerm" },
+  { "@id": "#place_USA", "name": "USA", "@type": "DefinedTerm" }
+]
+const lingGenreMap = {
+  MI: "Informational",
+  PL: "Drama",
+  SP: "Oratory",
+  DI: "Narrative",
+  PC: "Informational",
+  MM: "Narrative",
+  NB: "Informational",
+  NV: "Narrative",
+  OC: "Informational",
+  RP: "Report",
+  VE: "Forulaic",
+  IC: "Informational",
+  LG: "Informational",
+  PP: "Informational"
+}
+
 
 
 async function main() {
   const vocab = new Vocab;
   await vocab.load();
-  let datapack = new DataPack({ dataPacks: ['Glottolog'], indexFields: ['name']});
+  let datapack = new DataPack({ dataPacks: ['Glottolog'], indexFields: ['name'] });
   await datapack.load();
   let engLang = datapack.get({
     field: "name",
@@ -59,6 +114,7 @@ async function main() {
 
   const corpusCrate = corpus.crate;
   // TODO need some tools for all this
+  corpusCrate.addContext(vocab.getContext());
   corpusCrate.addContext(extraContext);
 
   dataDir = corpusCrate.getItem("data/");
@@ -70,13 +126,19 @@ async function main() {
   for (let register of registers) {
     corpusCrate.addItem(register);
   }
+  for (let texttype of textTypes) {
+    corpusCrate.addItem(texttype);
+  }
+  for (let place of places) {
+    corpusCrate.addItem(place);
+  }
   for (let cl of classes) {
     corpusCrate.addItem(cl);
   }
 
-  var workbook = await XLSX.readFile(coll.excelPath, {cellDates: true});
+  var workbook = await XLSX.readFile(coll.excelPath, { cellDates: true });
   var bibsheet = workbook.Sheets[workbook.SheetNames[1]];
-  const bibData = XLSX.utils.sheet_to_json(bibsheet, {raw: false});
+  const bibData = XLSX.utils.sheet_to_json(bibsheet, { raw: false });
 
   // Decode publications
   const citedNames = {};
@@ -101,10 +163,9 @@ async function main() {
     }
   }
   //console.log(citedNames);
-
   var worksheet = workbook.Sheets[workbook.SheetNames[0]];
 
-  const data = XLSX.utils.sheet_to_json(worksheet, {raw: false, range: 1});
+  const data = XLSX.utils.sheet_to_json(worksheet, { raw: false, range: 1 });
   for (let input of data) {
 
     //console.log(input)
@@ -141,7 +202,7 @@ async function main() {
       "@type": "Person",
       "name": input.Name,
       "birthDate": input.Birth,
-      "birthPlace": input.Origin,
+      "birthPlace": { "@id": `#place_${input.Origin}` },
       "gender": input["Gender_1"],
       "immigration": input.Arrival
     }
@@ -151,7 +212,7 @@ async function main() {
     authorProxy["@id"] = `${authorProxy["@id"]}-${input.Nr}-status`;
     authorProxy.name = `${input.Name} - status ${date} text #${input.Nr}`;
     authorProxy["age"] = input.Age;
-    authorProxy.class = {"@id": `#class_${input["Status_1"]}`};
+    authorProxy.class = { "@id": `#class_${input["Status"]}` };
     authorProxy["prov:specializationOf"] = author["@id"];
     // TODO - Addressees
 
@@ -172,35 +233,38 @@ async function main() {
 
     const citationStub = {
       "@type": "CreativeWork",
-      "materialType":vocab.getVocabItem("PrimaryMaterial"),
-      "isPartOf": {"@id": citedId},
+      "materialType": vocab.getVocabItem("PrimaryMaterial"),
+      "isPartOf": { "@id": citedId },
       "name": input.Source,
       "@id": citationStubId,
       "wordCount": input["# of words"]
     };
-
+    
     const item = {
       "@id": id,
       "@type": ["RepositoryObject"],
-      "conformsTo": {"@id": languageProfileURI("Object")},
+      "conformsTo": { "@id": languageProfileURI("Object") },
       "name": `Text ${input.Nr} ${date} ${author.name}`,
       "author": authorProxy,
-      "dateCreated": date,
-      "register": {"@id": `#register_${input.Register}`},
-      "linguisticGenre": {"@id": `#register_${input.Register}`},
-      "citation": citationStub,
-      "communicationMode": vocab.getVocabItem("WrittenLanguage")
+      "dateCreated": date,      
+      "register": { "@id": `#register_${input.Register}` },
+      "TextType": { "@id": `#texttype_${input.TextT}` },
+      "linguisticGenre": vocab.getVocabItem(lingGenreMap[input.TextT]),
+      "citation": citationStub
     };
-/*
-    if (item.register["@id"] === "#register_SB")  {
+
+    item.datePublished = input.Source.match(/.+(\d{4})/) ? input.Source.replace(/.+(\d{4})/, "$1") : date;
+
+
+
+    if (item.register["@id"] === "#register_SB") {
       item.communicationMode = vocab.getVocabItem("SpokenLanguage")
     } else {
       item.communicationMode = vocab.getVocabItem("WrittenLanguage")
 
-    }*/
+    }
 
-
-    if (input.Pages != "x") {
+    if (input.Pages !== "x") {
       const pages = input.Pages.split("-");
       const start = pages[0];
       citationStub.pageStart = start;

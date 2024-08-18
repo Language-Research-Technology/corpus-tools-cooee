@@ -269,12 +269,6 @@
           }
         ]
       }
-    },
-    {
-      "@id": "https://www.nationalarchives.gov.uk/PRONOM/undefined",
-      "@type": "website",
-      "name": "Microsoft Word Document",
-      "@reverse": {}
-    }
+    }    
   ]
 }
