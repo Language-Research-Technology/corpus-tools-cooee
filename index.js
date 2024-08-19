@@ -246,6 +246,7 @@ async function main() {
       "conformsTo": { "@id": languageProfileURI("Object") },
       "name": `Text ${input.Nr} ${date} ${author.name}`,
       "author": authorProxy,
+      "description":`Text ${input.Nr} ${date} ${author.name}`,
       "dateCreated": date,      
       "register": { "@id": `#register_${input.Register}` },
       "TextType": { "@id": `#texttype_${input.TextT}` },
