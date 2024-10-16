@@ -47,19 +47,19 @@
       ],
       "hasPart": [
         {
-          "@id": "#3-COOEE-4.doc"
+          "@id": "3-COOEE-4.doc"
         },
         {
-          "@id": "#COOEE%20contents.XLS"
+          "@id": "COOEE_contents.XLS"
         },
         {
-          "@id": "#COOEE.XLS"
+          "@id": "COOEE.XLS"
         },
         {
-          "@id": "#COOEE_contents.xlsx"
+          "@id": "COOEE_contents.xlsx"
         },
         {
-          "@id": "#COOEE_contents_original.xlsx"
+          "@id": "COOEE_contents_original.xlsx"
         }
       ],
       "license": [
@@ -70,7 +70,7 @@
       "@reverse": {}
     },
     {
-      "@id": "#3-COOEE-4.doc",
+      "@id": "3-COOEE-4.doc",
       "@type": "File",
       "name": "A COrpus of Oz Early English (COOEE)",
       "dateModified": [
@@ -109,7 +109,7 @@
       }
     },
     {
-      "@id": "#COOEE%20contents.XLS",
+      "@id": "COOEE_contents.XLS",
       "@type": "File",
       "name": "COOEE contents.XLS",
       "dateModified": [
@@ -133,7 +133,7 @@
       }
     },
     {
-      "@id": "#COOEE.XLS",
+      "@id": "COOEE.XLS",
       "@type": "File",
       "name": "COOEE.XLS",
       "dateModified": [
@@ -157,7 +157,7 @@
       }
     },
     {
-      "@id": "#COOEE_contents.xlsx",
+      "@id": "COOEE_contents.xlsx",
       "@type": "File",
       "name": "COOEE_contents.xlsx",
       "dateModified": [
@@ -178,7 +178,7 @@
       }
     },
     {
-      "@id": "#COOEE_contents_original.xlsx",
+      "@id": "COOEE_contents_original.xlsx",
       "@type": "File",
       "name": "COOEE_contents_original.xlsx",
       "dateModified": [
@@ -235,10 +235,10 @@
       "@reverse": {
         "encodingFormat": [
           {
-            "@id": "#COOEE%20contents.XLS"
+            "@id": "COOEE_contents.XLS"
           },
           {
-            "@id": "#COOEE.XLS"
+            "@id": "COOEE.XLS"
           }
         ]
       }
@@ -250,10 +250,10 @@
       "@reverse": {
         "encodingFormat": [
           {
-            "@id": "#COOEE_contents.xlsx"
+            "@id": "COOEE_contents.xlsx"
           },
           {
-            "@id": "#COOEE_contents_original.xlsx"
+            "@id": "COOEE_contents_original.xlsx"
           }
         ]
       }

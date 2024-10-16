@@ -6,6 +6,8 @@ const { DataPack } = require('@ldac/data-packs');
 const extraContext = {
   "register": "http://w3id.org/meta-share/meta-share/register",
   "TextType": "http://w3id.org/meta-share/meta-share/TextType",
+  "period": "http://purl.org/dc/terms/Period",
+
 }
 
 const classes = [
@@ -35,6 +37,12 @@ const classes = [
   }
 ]
 
+const periods = [
+  { "@id": "#period_1", "name": "Period 1 (1788-1825)", "@type": "DefinedTerm", "start": "1788", "end": "1825" },
+  { "@id": "#period_2", "name": "Period 2 (1826-1850)", "@type": "DefinedTerm", "start": "1826", "end": "1850" },
+  { "@id": "#period_3", "name": "Period 3 (1851-1875)", "@type": "DefinedTerm", "start": "1851", "end": "1875" },
+  { "@id": "#period_4", "name": "Period 4 (1876-1900)", "@type": "DefinedTerm", "start": "1876", "end": "1900" }
+]
 
 const registers = [
   { "@id": "#register_SB", "name": "Speech Based", "@type": "DefinedTerm" },
@@ -124,16 +132,19 @@ async function main() {
   corpusRoot["@type"] = ["Dataset", "RepositoryCollection"];
   corpus.mintArcpId();
   for (let register of registers) {
-    corpusCrate.addItem(register);
+    corpusCrate.addEntity(register);
   }
   for (let texttype of textTypes) {
-    corpusCrate.addItem(texttype);
+    corpusCrate.addEntity(texttype);
   }
   for (let place of places) {
-    corpusCrate.addItem(place);
+    corpusCrate.addEntity(place);
   }
   for (let cl of classes) {
-    corpusCrate.addItem(cl);
+    corpusCrate.addEntity(cl);
+  }
+  for (let period of periods) {
+    corpusCrate.addEntity(period);
   }
 
   var workbook = await XLSX.readFile(coll.excelPath, { cellDates: true });
@@ -156,16 +167,17 @@ async function main() {
         "@id": generateArcpId(coll.namespace, "work", `${authorName}${pub.Date}`)
       }
       work.inLanguage = engLang;
-      corpusCrate.addItem(work);
+      corpusCrate.addEntity(work);
       citedNames[authorName] = work;
 
-      //console.log(work["@id"], corpusCrate.getItem(work["@id"]))
+      // console.log(work["@id"], corpusCrate.getItem(work["@id"]))
     }
   }
   //console.log(citedNames);
   var worksheet = workbook.Sheets[workbook.SheetNames[0]];
 
   const data = XLSX.utils.sheet_to_json(worksheet, { raw: false, range: 1 });
+  //console.log(data)
   for (let input of data) {
 
     //console.log(input)
@@ -230,7 +242,7 @@ async function main() {
       }
     }
     const citationStubId = `${citedId}p${input.Pages}`;
-
+    //console.log(input.Source)
     const citationStub = {
       "@type": "CreativeWork",
       "materialType": vocab.getVocabItem("PrimaryMaterial"),
@@ -239,20 +251,34 @@ async function main() {
       "@id": citationStubId,
       "wordCount": input["# of words"]
     };
-    
+    const recipient = {
+      "@id": `${id.replace("item", "recipient")}`,
+      "@type": ["Person"],
+      "name": `${input.Nr} Recipient`,
+      "gender": input.AdresseeGender,
+      "class": { "@id": `#class_${input.AdresseeStatus}` },
+      "place": { "@id": `#place_${input.AdresseePlace}` }
+    }
+
     const item = {
       "@id": id,
       "@type": ["RepositoryObject"],
       "conformsTo": { "@id": languageProfileURI("Object") },
       "name": `Text ${input.Nr} ${date} ${author.name}`,
       "author": authorProxy,
-      "description":`Text ${input.Nr} ${date} ${author.name}`,
-      "dateCreated": date,      
+      "description": `Text ${input.Nr} ${date} ${author.name}`,
+      "dateCreated": date,
       "register": { "@id": `#register_${input.Register}` },
       "TextType": { "@id": `#texttype_${input.TextT}` },
+      "period": { "@id": `#period_${input.Nr.replace(/^(\d).+/, "$1")}` },
       "linguisticGenre": vocab.getVocabItem(lingGenreMap[input.TextT]),
       "citation": citationStub
     };
+    if (recipient.gender !== "x") {
+      console
+      item.recipient = recipient;
+    }
+
 
     item.datePublished = input.Source.match(/.+(\d{4})/) ? input.Source.replace(/.+(\d{4})/, "$1") : date;
 
@@ -262,7 +288,6 @@ async function main() {
       item.communicationMode = vocab.getVocabItem("SpokenLanguage")
     } else {
       item.communicationMode = vocab.getVocabItem("WrittenLanguage")
-
     }
 
     if (input.Pages !== "x") {
@@ -332,7 +357,7 @@ async function main() {
   for (let item of corpusCrate.getGraph()) {
     /// TODO - change to a new getItemsOfType() when available
     if (corpusCrate.utils.asArray(item["@type"]).includes("File")) {
-      await corpus.addFile(item, coll.templateCrateDir);
+      await corpus.addFile(item, coll.templateCrateDir, null, false);
     }
   }
   await corpus.addToRepo();
