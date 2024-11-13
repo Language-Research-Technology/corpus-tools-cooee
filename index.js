@@ -150,6 +150,8 @@ async function main() {
   var workbook = await XLSX.readFile(coll.excelPath, { cellDates: true });
   var bibsheet = workbook.Sheets[workbook.SheetNames[1]];
   const bibData = XLSX.utils.sheet_to_json(bibsheet, { raw: false });
+  corpusCrate.inLanguage = engLang;
+  corpusCrate.subjectLanguage = engLang;
 
   // Decode publications
   const citedNames = {};
@@ -167,9 +169,9 @@ async function main() {
         "@id": generateArcpId(coll.namespace, "work", `${authorName}${pub.Date}`)
       }
       work.inLanguage = engLang;
+      work.subjectLanguage = engLang;
       corpusCrate.addEntity(work);
       citedNames[authorName] = work;
-
       // console.log(work["@id"], corpusCrate.getItem(work["@id"]))
     }
   }
