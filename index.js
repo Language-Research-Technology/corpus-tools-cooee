@@ -2,6 +2,9 @@ const { Collector, generateArcpId } = require("oni-ocfl");
 const { languageProfileURI, Languages, Vocab } = require("language-data-commons-vocabs");
 const XLSX = require('xlsx');
 const { DataPack } = require('@ldac/data-packs');
+const { default: fsExtra } = require("fs-extra");
+const fs = require("fs");
+const path = require("path");
 
 const extraContext = {
   "register": "http://w3id.org/meta-share/meta-share/register",
@@ -312,7 +315,7 @@ async function main() {
       "@id": `data/${input.Nr}.txt`,
       "@type": ["File"],
       "materialType": vocab.getVocabItem("DerivedMaterial"),
-      "communicationMode": vocab.getVocabItem("WrittenLanguage"),
+      // "communicationMode": vocab.getVocabItem("WrittenLanguage"),
       "annotationOf": citationStub,
       "inLanguage": engLang,
       "encodingFormat": "text/plain"
@@ -324,26 +327,33 @@ async function main() {
       "@type": ["File"],
       "materialType": vocab.getVocabItem("DerivedMaterial"),
       "annotationOf": citationStub,
-      "communicationMode": vocab.getVocabItem("WrittenLanguage"),
+      // "communicationMode": vocab.getVocabItem("WrittenLanguage"),
       "inLanguage": engLang,
       "encodingFormat": "text/plain"
     }
 
-    /*if (item.register["@id"] === "#register_SB")  {
+    if (item.register["@id"] === "#register_SB") {
       file.communicationMode = vocab.getVocabItem("SpokenLanguage");
       plain.communicationMode = vocab.getVocabItem("SpokenLanguage");
     } else {
       file.communicationMode = vocab.getVocabItem("WrittenLanguage")
       plain.communicationMode = vocab.getVocabItem("WrittenLanguage")
-    }*/
+    }
 
     item.inLanguage = engLang;
 
-    item.indexableText = plain;
-    item.hasPart = [plain, file];
+    
+    if (fs.existsSync(path.join(coll.templateCrateDir, file["@id"]))) {
+      item.indexableText = plain;
+      item.hasPart = [plain, file];
+      corpusCrate.pushValue(corpusRoot, "hasPart", file);
+      corpusCrate.pushValue(corpusRoot, "hasPart", plain);
+    } else {
+      item.description = `${item.description}. This item is not currently available.`;
+    }
 
-    corpusCrate.pushValue(corpusRoot, "hasPart", file);
-    corpusCrate.pushValue(corpusRoot, "hasPart", plain);
+    // corpusCrate.pushValue(corpusRoot, "hasPart", file);
+    // corpusCrate.pushValue(corpusRoot, "hasPart", plain);
 
 
     //corpusCrate.addItem(author);
