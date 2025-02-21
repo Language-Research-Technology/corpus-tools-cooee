@@ -159,7 +159,7 @@ async function main() {
     "@type": "RepositoryObject",
     datePublished: corpusRoot.datePublished,
     name: "COOEE Supporting Documents",
-    publisher: corpusRoot.publisher,
+    description: "Original Microsoft Excel Data Files and Microsoft Word background document",
     "@id": generateArcpId(coll.namespace, "supportingDocuments"),
     hasPart: corpusRoot.hasPart
   }
