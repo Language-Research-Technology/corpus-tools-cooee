@@ -50,7 +50,7 @@
           "@id": "3-COOEE-4.doc"
         },
         {
-          "@id": "COOEE_contents.XLS"
+          "@id": "COOEE contents.XLS"
         },
         {
           "@id": "COOEE.XLS"
@@ -110,7 +110,7 @@
       }
     },
     {
-      "@id": "COOEE_contents.XLS",
+      "@id": "COOEE contents.XLS",
       "@type": "File",
       "name": "COOEE contents.XLS",
       "dateModified": [
@@ -236,7 +236,7 @@
       "@reverse": {
         "encodingFormat": [
           {
-            "@id": "COOEE_contents.XLS"
+            "@id": "COOEE contents.XLS"
           },
           {
             "@id": "COOEE.XLS"
