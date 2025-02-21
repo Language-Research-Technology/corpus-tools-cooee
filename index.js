@@ -155,7 +155,15 @@ async function main() {
   const bibData = XLSX.utils.sheet_to_json(bibsheet, { raw: false });
   corpusCrate.inLanguage = engLang;
   corpusCrate.subjectLanguage = engLang;
-
+  const supportingDocs = {
+    "@type": "RepositoryObject",
+    datePublished: corpusRoot.datePublished,
+    name: "COOEE Supporting Documents",
+    publisher: corpusRoot.publisher,
+    "@id": generateArcpId(coll.namespace, "supportingDocuments"),
+    hasPart: corpusRoot.hasPart
+  }
+  corpusCrate.pushValue(corpusRoot, 'hasMember', supportingDocs)
   // Decode publications
   const citedNames = {};
   for (const pub of bibData) {
@@ -342,15 +350,19 @@ async function main() {
 
     item.inLanguage = engLang;
 
+    //if it has a file it's a data entity, must have a file path relative to root of crate
     
     if (fs.existsSync(path.join(coll.templateCrateDir, file["@id"]))) {
       item.indexableText = plain;
-      item.hasPart = [plain, file];
       corpusCrate.pushValue(corpusRoot, "hasPart", file);
       corpusCrate.pushValue(corpusRoot, "hasPart", plain);
     } else {
-      item.description = `${item.description}. This item is not currently available.`;
+      item.description = `${item.description}. This item is not currently available in a digital form.`;
+      plain["@type"] = ["CreativeWork"];
+      file["@type"] = ["CreativeWork"];
     }
+
+    item.hasPart = [plain, file];
 
     // corpusCrate.pushValue(corpusRoot, "hasPart", file);
     // corpusCrate.pushValue(corpusRoot, "hasPart", plain);
