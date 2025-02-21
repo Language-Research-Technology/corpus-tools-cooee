@@ -157,6 +157,7 @@ async function main() {
   corpusCrate.subjectLanguage = engLang;
   const supportingDocs = {
     "@type": "RepositoryObject",
+    "conformsTo": { "@id": languageProfileURI("Object") },
     datePublished: corpusRoot.datePublished,
     name: "COOEE Supporting Documents",
     description: "Original Microsoft Excel Data Files and Microsoft Word background document",
