@@ -62,18 +62,24 @@
           "@id": "COOEE_contents_original.xlsx"
         }
       ],
-      "datePublished":2012,
+      "hasCollectionProtocol": {
+        "@id": "3-COOEE-4.doc"
+      },
+      "datePublished": 2012,
       "license": [
         {
           "@id": "https://creativecommons.org/licenses/by/4.0/"
         }
       ],
-      "doi":"https://doi.org/10.26180/23961609",
+      "doi": "https://doi.org/10.26180/23961609",
       "@reverse": {}
     },
     {
       "@id": "3-COOEE-4.doc",
-      "@type": "File",
+      "@type": [
+        "File",
+        "CollectionProtocol"
+      ],
       "name": "A COrpus of Oz Early English (COOEE)",
       "dateModified": [
         "2021-11-10T11:16:31+11:00"
@@ -81,6 +87,9 @@
       "description": [
         "Describes the collection methodology and sources"
       ],
+      "collectionProtocolType": {
+        "@id": "ldac:MaterialSelectionCriteria"
+      },
       "encodingFormat": [
         "application/msword",
         {
@@ -271,6 +280,6 @@
           }
         ]
       }
-    }    
+     }
   ]
 }
