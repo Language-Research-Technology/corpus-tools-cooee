@@ -6,12 +6,13 @@ const { default: fsExtra } = require("fs-extra");
 const fs = require("fs");
 const path = require("path");
 
+// Some terms borrowed from elsewhere - more get added below for local custom properties
 const extraContext = {
   "register": "http://w3id.org/meta-share/meta-share/register",
   "TextType": "http://w3id.org/meta-share/meta-share/TextType",
-  "period": "http://purl.org/dc/terms/Period",
-
+  "period": "http://purl.org/dc/terms/Period"
 }
+
 
 const classes = [
   {
@@ -160,6 +161,33 @@ async function main() {
   const corpus = coll.newObject(coll.templateCrateDir);
 
   const corpusCrate = corpus.crate;
+
+  // Make custom properties
+  // Add some extra cont properties that are specific to this data set
+  // These are not in the standard vocab, so we need to add them here
+  const birthDateEstimateEndProp = {  
+    "@id": generateArcpId(coll.namespace, "terms", "#birthDateEstimateEnd"),
+    "name": "Birth Date Estimate End",
+    "description": "The end of the range of possible birth dates for a person - this is used when the birth date field was specified to the decade like 188x",
+    "@type": "rdfs:Property"
+  }
+  extraContext["birthDateEstimateEnd"] = birthDateEstimateEndProp["@id"];
+
+  const birthDateEstimateStartProp = {  
+    "@id": generateArcpId(coll.namespace, "terms", "#birthDateEstimateStart"),
+    "name": "Birth Date Estimate Start",
+    "description": "The start of the range of possible birth dates for a person - this is used when the birth date field was specified to the decade like 188x",
+    "@type": "rdfs:Property"
+  }
+  extraContext["birthDateEstimateStart"] = birthDateEstimateStartProp["@id"];
+
+  
+
+
+  // Add the custom props to the crate 
+  corpusCrate.addEntity(birthDateEstimateEndProp);
+  corpusCrate.addEntity(birthDateEstimateStartProp);
+
   // TODO need some tools for all this
   corpusCrate.addContext(vocab.getContext());
   corpusCrate.addContext(extraContext);
@@ -167,6 +195,11 @@ async function main() {
   dataDir = corpusCrate.getItem("data/");
 
   corpusCrate.addProfile(languageProfileURI("Collection"));
+
+
+
+
+
   const corpusRoot = corpus.rootDataset;
   corpusRoot["@type"] = ["Dataset", "RepositoryCollection"];
   corpus.mintArcpId();
@@ -450,7 +483,7 @@ async function main() {
   corpusRoot.hasMember.sort((a, b) => (
     a["@id"].localeCompare(b["@id"]))
   )
-
+  console.log(corpusRoot.toJSON());
   // for (let item of corpusCrate.getGraph()) {
   //   /// TODO - change to a new getItemsOfType() when available
   //   if (corpusCrate.utils.asArray(item["@type"]).includes("File")) {
