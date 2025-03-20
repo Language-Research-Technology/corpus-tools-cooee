@@ -38,7 +38,9 @@ const classes = [
     "description": " convicts, labourers, uneducated people, servants",
     "@type": "DefinedTerm"
   }
-]
+];
+
+const classesById = Object.fromEntries(classes.map(c => [c["@id"], c]));
 
 const periods = [
   { "@id": "#period_1", "name": "Period 1 (1788-1825)", "@type": "DefinedTerm", "start": "1788", "end": "1825" },
@@ -88,8 +90,20 @@ const places = [
   { "@id": "#place_NZ", "name": "New Zealand", "@type": "DefinedTerm" },
   { "@id": "#place_SA", "name": "South Africa", "@type": "DefinedTerm" },
   { "@id": "#place_SI", "name": "Southern Ireland", "@type": "DefinedTerm" },
-  { "@id": "#place_USA", "name": "USA", "@type": "DefinedTerm" }
-]
+  { "@id": "#place_USA", "name": "USA", "@type": "DefinedTerm" },
+  // Extra places that are in place_writing and author origin, but not in the codification
+  { "@id": "#place_At-Sea", "name": "At Sea", "@type": "DefinedTerm" },
+  { "@id": "#place_Norfolk-Island", "name": "Norfolk Island", "@type": "DefinedTerm" },
+  { "@id": "#place_Ireland", "name": "Ireland", "@type": "DefinedTerm" },
+  { "@id": "#place_Italy", "name": "Italy", "@type": "DefinedTerm" },
+  { "@id": "#place_Azores", "name": "Azores", "@type": "DefinedTerm" },
+  { "@id": "#place_Germany", "name": "Germany", "@type": "DefinedTerm" },
+  { "@id": "#place_British-Guiana", "name": "British Guiana", "@type": "DefinedTerm" },
+  { "@id": "#place_Portugal", "name": "Portugal", "@type": "DefinedTerm" },
+  { "@id": "#place_A/GB", "name": "Portugal", "@type": "DefinedTerm" } // this may mean Australia and/or GB, what to do? 
+];
+const placesById = Object.fromEntries(places.map(c => [c["@id"], c]));
+
 const lingGenreMap = {
   MI: "Informational",
   PL: "Drama",
@@ -107,7 +121,29 @@ const lingGenreMap = {
   PP: "Informational"
 }
 
-
+/**
+ * Return the start and end year implied by an approximate indicator of year.
+ *
+ * Information about these historical documents is often uncertain: this is indicated
+ * with decade approximations like 185X for the 1850's.
+ */
+function handleUncertainYear(yearExpression) {
+  yearExpression = yearExpression.toUpperCase();
+  if (yearExpression === "?") {
+      return ['', '', ''];
+  } else if (typeof yearExpression === 'string' && yearExpression.endsWith("X")) {
+      return [
+          yearExpression,
+          yearExpression.replace('X', '0'),
+          yearExpression.replace('X', '9')
+      ];
+  } else if (typeof yearExpression === 'string' && yearExpression.includes("/")) {
+      const [start, end] = yearExpression.split("/");
+      return [yearExpression,start, end];
+  } else {
+      return [yearExpression, yearExpression, yearExpression];
+  }
+}
 
 async function main() {
   const vocab = new Vocab;
@@ -194,7 +230,7 @@ async function main() {
   //console.log(data)
   for (let input of data) {
 
-    //console.log(input)
+    // console.log(input)
     //const interviewDate = new Date(input["Date of interview"]).toISOString().replace(/T.*/, "");
     /*
     {
@@ -222,23 +258,59 @@ async function main() {
     const date = input["Year Writing"];
     const id = generateArcpId(coll.namespace, "item", input["Nr"]);
     const authorID = `${input.Name.replace(/[, ]+/, "_")}`;
+    let bornInAustralia = false;
+    let arrivalDate = input.Arrival;
+    let [birthDate, birthDateEstimateStart, birthDateEstimateEnd] = handleUncertainYear(input.Birth);
+    let arrivalDateEstimateStart = birthDateEstimateStart;
+    let arrivalDateEstimateEnd = birthDateEstimateEnd;
+    //TODO: define rdf property for date estimate
 
+    if (arrivalDate === "native") {
+      bornInAustralia = true;
+      arrivalDate = '';
+    } else {
+      [arrivalDate, arrivalDateEstimateStart, arrivalDateEstimateEnd] = handleUncertainYear(arrivalDate);
+    }
+
+    // # Abode: This captures the the number of years lived in Australia *at the time of
+    // # writing* - it's a relational property of the author at the time the text was
+    // # written/published. Because we now have a born_in_australia flag, the 'nv' marker
+    // # is redundant - we'll null it out along with the actual nulls. Also note that
+    // # years lived in australia can be inferred from the birth year for those born here,
+    // # but I'm not sure if that's comparable to the other estimates, spending birth - 18
+    // # years in Australia is very different to spending 18-36 years of age, even if
+    // # they're both the same number of years.
+    const yearsLivedInAustralia = input.Abode in {un: '', nv: ''} ? '' : input.Abode;
+    const birthPlaceId = `#place_${input.Origin.replace(' ', '-')}`;
+    const birthPlace = placesById[birthPlaceId] ? { '@id': birthPlaceId } : '';
     const author = {
       "@id": generateArcpId(coll.namespace, "author", authorID),
       "@type": "Person",
-      "name": input.Name,
-      "birthDate": input.Birth,
-      "birthPlace": { "@id": `#place_${input.Origin}` },
-      "gender": input["Gender_1"],
-      "immigration": input.Arrival
-    }
+      // Some entries are annotated with a star - reasons unknown. They do not appear to be a disambiguating marker 
+      // for people with the same name as the demographic or other information always lines up.
+      name: input.Name.replace('*', ''),
+      birthDate,
+      birthDateEstimateStart,
+      birthDateEstimateEnd,
+      birthPlace,
+      "gender": input["Gender"],
+      arrivalDate,
+      arrivalDateEstimateStart,
+      arrivalDateEstimateEnd,
+      bornInAustralia,
+      yearsLivedInAustralia
+    };
+    
+    console.log(author);
+    const authorClass = classesById[`#class_${input.Status}`];
+
 
     const authorProxy = JSON.parse(JSON.stringify(author));
     authorProxy["@type"] = ["Person"];
     authorProxy["@id"] = `${authorProxy["@id"]}-${input.Nr}-status`;
     authorProxy.name = `${input.Name} - status ${date} text #${input.Nr}`;
-    authorProxy["age"] = input.Age;
-    authorProxy.class = { "@id": `#class_${input["Status"]}` };
+    authorProxy["age"] = input.Age === 'un' ? '' : input.Age;
+    authorProxy.class = authorClass ?  { "@id": authorClass['@id'] } : '';
     authorProxy["prov:specializationOf"] = author["@id"];
     // TODO - Addressees
 
@@ -379,13 +451,13 @@ async function main() {
     a["@id"].localeCompare(b["@id"]))
   )
 
-  for (let item of corpusCrate.getGraph()) {
-    /// TODO - change to a new getItemsOfType() when available
-    if (corpusCrate.utils.asArray(item["@type"]).includes("File")) {
-      await corpus.addFile(item, coll.templateCrateDir, null, false);
-    }
-  }
-  await corpus.addToRepo();
+  // for (let item of corpusCrate.getGraph()) {
+  //   /// TODO - change to a new getItemsOfType() when available
+  //   if (corpusCrate.utils.asArray(item["@type"]).includes("File")) {
+  //     await corpus.addFile(item, coll.templateCrateDir, null, false);
+  //   }
+  // }
+  // await corpus.addToRepo();
 }
 
 main();
