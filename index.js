@@ -9,46 +9,17 @@ const path = require("path");
 // Some terms borrowed from elsewhere - more get added below for local custom properties
 const extraContext = {
   "register": "http://w3id.org/meta-share/meta-share/register",
-  "TextType": "http://w3id.org/meta-share/meta-share/TextType",
+  //"TextType": "http://w3id.org/meta-share/meta-share/TextType",
   "period": "http://purl.org/dc/terms/Period"
 }
 
-
-const classes = [
-  {
-    "@id": "#class_I",
-    "name": "Upper Class",
-    "description": " Nobility, university education, government service; Parliaments and Committees",
-    "@type": "DefinedTerm"
-  },
-  {
-    "@id": "#class_II",
-    "name": "Upper Middle Class",
-    "description": " educated citizens, gentlemen",
-    "@type": "DefinedTerm"
-  },
-  {
-    "@id": "#class_III",
-    "name": "Lower Middle Class",
-    "description": " free settlers with little education",
-    "@type": "DefinedTerm"
-  },
-  {
-    "@id": "#class_IIII",
-    "name": "Lower Class",
-    "description": " convicts, labourers, uneducated people, servants",
-    "@type": "DefinedTerm"
-  }
-];
-
-const classesById = Object.fromEntries(classes.map(c => [c["@id"], c]));
-
-const periods = [
-  { "@id": "#period_1", "name": "Period 1 (1788-1825)", "@type": "DefinedTerm", "start": "1788", "end": "1825" },
-  { "@id": "#period_2", "name": "Period 2 (1826-1850)", "@type": "DefinedTerm", "start": "1826", "end": "1850" },
-  { "@id": "#period_3", "name": "Period 3 (1851-1875)", "@type": "DefinedTerm", "start": "1851", "end": "1875" },
-  { "@id": "#period_4", "name": "Period 4 (1876-1900)", "@type": "DefinedTerm", "start": "1876", "end": "1900" }
-]
+// const periods = [
+//   { "@id": "#period_1", "name": "Period 1 (1788-1825)", "@type": "DefinedTerm", "start": "1788", "end": "1825" },
+//   { "@id": "#period_2", "name": "Period 2 (1826-1850)", "@type": "DefinedTerm", "start": "1826", "end": "1850" },
+//   { "@id": "#period_3", "name": "Period 3 (1851-1875)", "@type": "DefinedTerm", "start": "1851", "end": "1875" },
+//   { "@id": "#period_4", "name": "Period 4 (1876-1900)", "@type": "DefinedTerm", "start": "1876", "end": "1900" }
+// ]
+const periods = [ '', '1788/1825', '1826/1850', '1851/1875', '1876/1900' ];
 
 const registers = [
   { "@id": "#register_SB", "name": "Speech Based", "@type": "DefinedTerm" },
@@ -71,39 +42,7 @@ const textTypes = [
   { "@id": "#texttype_IC", "name": "Imperial Correspondence", "@type": "DefinedTerm" },
   { "@id": "#texttype_LG", "name": "Legal English", "@type": "DefinedTerm" },
   { "@id": "#texttype_PP", "name": "Petitions & Proclamations", "@type": "DefinedTerm" }
-]
-const places = [
-  { "@id": "#place_A", "name": "Australia", "@type": "DefinedTerm" },
-  { "@id": "#place_A-NSW", "name": "New South Wales", "@type": "DefinedTerm" },
-  { "@id": "#place_A-QLD", "name": "Queensland", "@type": "DefinedTerm" },
-  { "@id": "#place_A-NT", "name": "Northern Territory", "@type": "DefinedTerm" },
-  { "@id": "#place_A-SA", "name": "South Australia", "@type": "DefinedTerm" },
-  { "@id": "#place_A-VDL", "name": "Van Diemen's Land", "@type": "DefinedTerm" },
-  { "@id": "#place_A-VIC", "name": "Victoria", "@type": "DefinedTerm" },
-  { "@id": "#place_A-WA", "name": "Western Australia", "@type": "DefinedTerm" },
-  { "@id": "#place_CAN", "name": "Canada", "@type": "DefinedTerm" },
-  { "@id": "#place_GB", "name": "Great Britain", "@type": "DefinedTerm" },
-  { "@id": "#place_GB-E", "name": "England", "@type": "DefinedTerm" },
-  { "@id": "#place_GB-SC", "name": "Scotland", "@type": "DefinedTerm" },
-  { "@id": "#place_GB-W", "name": "Wales", "@type": "DefinedTerm" },
-  { "@id": "#place_India", "name": "India", "@type": "DefinedTerm" },
-  { "@id": "#place_NI", "name": "Northern Ireland", "@type": "DefinedTerm" },
-  { "@id": "#place_NZ", "name": "New Zealand", "@type": "DefinedTerm" },
-  { "@id": "#place_SA", "name": "South Africa", "@type": "DefinedTerm" },
-  { "@id": "#place_SI", "name": "Southern Ireland", "@type": "DefinedTerm" },
-  { "@id": "#place_USA", "name": "USA", "@type": "DefinedTerm" },
-  // Extra places that are in place_writing and author origin, but not in the codification
-  { "@id": "#place_At-Sea", "name": "At Sea", "@type": "DefinedTerm" },
-  { "@id": "#place_Norfolk-Island", "name": "Norfolk Island", "@type": "DefinedTerm" },
-  { "@id": "#place_Ireland", "name": "Ireland", "@type": "DefinedTerm" },
-  { "@id": "#place_Italy", "name": "Italy", "@type": "DefinedTerm" },
-  { "@id": "#place_Azores", "name": "Azores", "@type": "DefinedTerm" },
-  { "@id": "#place_Germany", "name": "Germany", "@type": "DefinedTerm" },
-  { "@id": "#place_British-Guiana", "name": "British Guiana", "@type": "DefinedTerm" },
-  { "@id": "#place_Portugal", "name": "Portugal", "@type": "DefinedTerm" },
-  { "@id": "#place_A/GB", "name": "Portugal", "@type": "DefinedTerm" } // this may mean Australia and/or GB, what to do? 
 ];
-const placesById = Object.fromEntries(places.map(c => [c["@id"], c]));
 
 const lingGenreMap = {
   MI: "Informational",
@@ -161,23 +100,27 @@ async function main() {
   const corpus = coll.newObject(coll.templateCrateDir);
 
   const corpusCrate = corpus.crate;
-
+  
+  function getEntityRef(id) {
+    if (corpusCrate.hasEntity(id)) return { '@id': id };
+  }
+  
   // Make custom properties
   // Add some extra cont properties that are specific to this data set
   // These are not in the standard vocab, so we need to add them here
   const birthDateEstimateEndProp = {  
-    "@id": generateArcpId(coll.namespace, "terms", "#birthDateEstimateEnd"),
-    "name": "Birth Date Estimate End",
-    "description": "The end of the range of possible birth dates for a person - this is used when the birth date field was specified to the decade like 188x",
-    "@type": "rdfs:Property"
+    "@id": generateArcpId(coll.namespace, "terms", "birthDateEstimateEnd"),
+    "rdfs:label": "birthDateEstimateEnd",
+    "rdfs:comment": "The end of the range of possible birth dates for a person - this is used when the birth date field was specified to the decade like 188x",
+    "@type": "rdf:Property"
   }
   extraContext["birthDateEstimateEnd"] = birthDateEstimateEndProp["@id"];
 
   const birthDateEstimateStartProp = {  
-    "@id": generateArcpId(coll.namespace, "terms", "#birthDateEstimateStart"),
-    "name": "Birth Date Estimate Start",
-    "description": "The start of the range of possible birth dates for a person - this is used when the birth date field was specified to the decade like 188x",
-    "@type": "rdfs:Property"
+    "@id": generateArcpId(coll.namespace, "terms", "birthDateEstimateStart"),
+    "rdfs:label": "birthDateEstimateStart",
+    "rdfs:comment": "The start of the range of possible birth dates for a person - this is used when the birth date field was specified to the decade like 188x",
+    "@type": "rdf:Property"
   }
   extraContext["birthDateEstimateStart"] = birthDateEstimateStartProp["@id"];
 
@@ -209,15 +152,15 @@ async function main() {
   for (let texttype of textTypes) {
     corpusCrate.addEntity(texttype);
   }
-  for (let place of places) {
-    corpusCrate.addEntity(place);
-  }
-  for (let cl of classes) {
-    corpusCrate.addEntity(cl);
-  }
-  for (let period of periods) {
-    corpusCrate.addEntity(period);
-  }
+  // for (let place of places) {
+  //   corpusCrate.addEntity(place);
+  // }
+  // for (let cl of classes) {
+  //   corpusCrate.addEntity(cl);
+  // }
+  // for (let period of periods) {
+  //   corpusCrate.addEntity(period);
+  // }
 
   var workbook = await XLSX.readFile(coll.excelPath, { cellDates: true });
   var bibsheet = workbook.Sheets[workbook.SheetNames[1]];
@@ -314,12 +257,16 @@ async function main() {
     // # years in Australia is very different to spending 18-36 years of age, even if
     // # they're both the same number of years.
     const yearsLivedInAustralia = input.Abode in {un: '', nv: ''} ? '' : input.Abode;
-    const birthPlaceId = `#place_${input.Origin.replace(' ', '-')}`;
-    const birthPlace = placesById[birthPlaceId] ? { '@id': birthPlaceId } : '';
-    //todo check for A/GB
+    
+    // Place entities are defined in the ro-crate-metadata.json file 
+    // Note that there are extra places that are in place_writing and author origin, but not in the codification
+    // A slash (/) in the Origin, such as A/GB will be converted to multiple places eg [A, GB]
+    const origin = input.Origin.split('/').filter(e => e);
+    const birthPlace = origin.map(o => getEntityRef(`#place_${o.trim().replace(' ', '-')}`)).filter(e => e);
+    
     const author = {
       "@id": generateArcpId(coll.namespace, "author", authorID),
-      "@type": "Person",
+      "@type": ["Person"],
       // Some entries are annotated with a star - reasons unknown. They do not appear to be a disambiguating marker 
       // for people with the same name as the demographic or other information always lines up.
       name: input.Name.replace('*', ''),
@@ -327,22 +274,20 @@ async function main() {
       birthDateEstimateStart,
       birthDateEstimateEnd,
       birthPlace,
-      "gender": input["Gender"],
+      gender: input.Gender,
       arrivalDate,
       arrivalDateEstimateStart,
       arrivalDateEstimateEnd,
       bornInAustralia,
       yearsLivedInAustralia
     };
-    const authorClass = classesById[`#class_${input.Status}`];
-
 
     const authorProxy = JSON.parse(JSON.stringify(author));
     authorProxy["@type"] = ["Person"];
     authorProxy["@id"] = `${authorProxy["@id"]}-${input.Nr}-status`;
     authorProxy.name = `${input.Name} - status ${date} text #${input.Nr}`;
     authorProxy["age"] = input.Age === 'un' ? '' : input.Age;
-    authorProxy.class = authorClass ?  { "@id": authorClass['@id'] } : '';
+    authorProxy.class = getEntityRef(`#class_${input.Status}`);
     authorProxy["prov:specializationOf"] = author["@id"];
 
     if (!birthDate && !authorProxy.age) {
@@ -350,7 +295,7 @@ async function main() {
       authorProxy['@type'].push('Organization');
       author.description = authorProxy.description = 'This author may be an organization, but it is unclear in the original data source.';
     }
-    console.log(authorProxy);
+    //console.log(authorProxy);
 
     // TODO - Addressees
 
@@ -379,36 +324,51 @@ async function main() {
     };
     const recipient = {
       "@id": `${id.replace("item", "recipient")}`,
-      "@type": ["Person"],
-      "name": `${input.Nr} Recipient`,
-      "gender": input.AdresseeGender,
-      "class": { "@id": `#class_${input.AdresseeStatus}` },
-      "place": { "@id": `#place_${input.AdresseePlace}` }
+      //"@type": ["Person"],
+      name: `${input.Nr} Recipient`,
+      //"gender": input.AdresseeGender,
+      class: getEntityRef(`#class_${input.AdresseeStatus}`),
+      place: getEntityRef(`#class_${input.AdresseePlace.trim().replace(' ', '-')}`)
+    };
+    const recipientGender = input.AdresseeGender.toLowerCase();
+    if (recipientGender in {m:'', f:''}) {
+      recipient['@type'] = 'Person';
+      recipient.gender = recipientGender;
+    } else if (recipientGender === 'fam') {
+      recipient['@type'] = 'PeopleAudience';
+      recipient.name = `${input.Nr} Family Recipient`;
     }
 
     const item = {
       "@id": id,
       "@type": ["RepositoryObject"],
       "conformsTo": { "@id": languageProfileURI("Object") },
+      identifier: input.Nr,
       "name": `Text ${input.Nr} ${date} ${author.name}`,
       "author": authorProxy,
       "description": `Text ${input.Nr} ${date} ${author.name}`,
       "dateCreated": date,
       "register": { "@id": `#register_${input.Register}` },
-      "TextType": { "@id": `#texttype_${input.TextT}` },
-      "period": { "@id": `#period_${input.Nr.replace(/^(\d).+/, "$1")}` },
+      "textType": { "@id": `#texttype_${input.TextT}` },
+      //"period": { "@id": `#period_${input.Nr.replace(/^(\d).+/, "$1")}` },
+      temporalCoverage: periods[input.Nr.split('-')[0]],
+      locationCreated: getEntityRef(`#place_${input['Place Writing'].trim().replace(' ', '-')}`),
+      wordCount: input["# of words"],
       "linguisticGenre": vocab.getVocabItem(lingGenreMap[input.TextT]),
       "citation": citationStub
     };
-    if (recipient.gender !== "x") {
-      console
+    if (recipient['@type']) {
       item.recipient = recipient;
     }
 
-
     item.datePublished = input.Source.match(/.+(\d{4})/) ? input.Source.replace(/.+(\d{4})/, "$1") : date;
 
-
+    const [startInt, endInt] = item.temporalCoverage.split('/').map(parseInt);
+    const dateInt = parseInt(date);
+    if (startInt > date || endInt < date) { 
+      console.log(item); 
+      return;
+    }
 
     if (item.register["@id"] === "#register_SB") {
       item.communicationMode = vocab.getVocabItem("SpokenLanguage")
