@@ -271,6 +271,168 @@
           }
         ]
       }
-    }    
+    },
+    {
+      "@id": "#place_A",
+      "name": "Australia",
+      "@type": "Place",
+      "asWKT": "POLYGON((113.338953 -43.634597, 153.569469 -43.634597, 153.569469 -10.668185, 113.338953 -10.668185, 113.338953 -43.634597))"
+    },
+    {
+      "@id": "#place_A-NSW",
+      "name": "New South Wales",
+      "@type": "Place",
+      "asWKT": "POLYGON((140.999271 -37.505041, 153.638673 -37.505041, 153.638673 -28.157015, 140.999271 -28.157015, 140.999271 -37.505041))"
+    },
+    {
+      "@id": "#place_A-QLD",
+      "name": "Queensland",
+      "@type": "Place",
+      "asWKT": "POLYGON((138.0 -29.0, 153.0 -29.0, 153.0 -10.0, 138.0 -10.0, 138.0 -29.0))"
+    },
+    {
+      "@id": "#place_A-NT",
+      "name": "Northern Territory",
+      "@type": "Place",
+      "asWKT": "POLYGON((129.0 -26.0, 138.0 -26.0, 138.0 -10.0, 129.0 -10.0, 129.0 -26.0))"
+    },
+    {
+      "@id": "#place_A-SA",
+      "name": "South Australia",
+      "@type": "Place",
+      "asWKT": "POLYGON((129.0 -38.0, 141.0 -38.0, 141.0 -26.0, 129.0 -26.0, 129.0 -38.0))"
+    },
+    {
+      "@id": "#place_A-VDL",
+      "name": "Van Diemen's Land",
+      "@type": "Place",
+      "asWKT": "POLYGON ((143.481445 -44.119142, 148.842773 -44.119142, 148.842773 -39.300299, 143.481445 -39.300299, 143.481445 -44.119142))"
+    },
+    {
+      "@id": "#place_A-VIC",
+      "name": "Victoria",
+      "@type": "Place",
+      "asWKT": "POLYGON((140.961681 -39.15919, 150.0 -39.15919, 150.0 -34.0, 140.961681 -34.0, 140.961681 -39.15919))"
+    },
+    {
+      "@id": "#place_A-WA",
+      "name": "Western Australia",
+      "@type": "Place",
+      "asWKT": "POLYGON((112.921114 -35.134991, 129.0 -35.134991, 129.0 -13.689492, 112.921114 -13.689492, 112.921114 -35.134991))"
+    },
+    {
+      "@id": "#place_CAN",
+      "name": "Canada",
+      "@type": "Place",
+      "asWKT": "POLYGON((-141.0 41.7, -52.6 41.7, -52.6 83.1, -141.0 83.1, -141.0 41.7))"
+    },
+    {
+      "@id": "#place_GB",
+      "name": "Great Britain",
+      "@type": "Place",
+      "asWKT": "POLYGON((-8.0 49.9, 2.0 49.9, 2.0 60.9, -8.0 60.9, -8.0 49.9))"
+    },
+    {
+      "@id": "#place_GB-E",
+      "name": "England",
+      "@type": "Place",
+      "asWKT": "POLYGON((-6.0 49.9, 2.0 49.9, 2.0 55.8, -6.0 55.8, -6.0 49.9))"
+    },
+    {
+      "@id": "#place_GB-SC",
+      "name": "Scotland",
+      "@type": "Place",
+      "asWKT": "POLYGON((-7.6 54.6, -0.8 54.6, -0.8 60.9, -7.6 60.9, -7.6 54.6))"
+    },
+    {
+      "@id": "#place_GB-W",
+      "name": "Wales",
+      "@type": "Place",
+      "asWKT": "POLYGON((-5.5 51.4, -2.7 51.4, -2.7 53.4, -5.5 53.4, -5.5 51.4))"
+    },
+    {
+      "@id": "#place_India",
+      "name": "India",
+      "@type": "Place",
+      "asWKT": "POLYGON((68.0 6.0, 97.0 6.0, 97.0 35.0, 68.0 35.0, 68.0 6.0))"
+    },
+    {
+      "@id": "#place_NI",
+      "name": "Northern Ireland",
+      "@type": "Place",
+      "asWKT": "POLYGON((-8.2 54.0, -5.4 54.0, -5.4 55.2, -8.2 55.2, -8.2 54.0))"
+    },
+    {
+      "@id": "#place_NZ",
+      "name": "New Zealand",
+      "@type": "Place",
+      "asWKT": "POLYGON((166.0 -47.0, 179.0 -47.0, 179.0 -34.0, 166.0 -34.0, 166.0 -47.0))"
+    },
+    {
+      "@id": "#place_SA",
+      "name": "South Africa",
+      "@type": "Place",
+      "asWKT": "POLYGON((16.0 -35.0, 33.0 -35.0, 33.0 -22.0, 16.0 -22.0, 16.0 -35.0))"
+    },
+    {
+      "@id": "#place_SI",
+      "name": "Southern Ireland",
+      "@type": "Place",
+      "asWKT": "POLYGON((-10.5 51.4, -5.5 51.4, -5.5 55.4, -10.5 55.4, -10.5 51.4))"
+    },
+    {
+      "@id": "#place_USA",
+      "name": "USA",
+      "@type": "Place",
+      "asWKT": "POLYGON((-125.0 24.0, -66.0 24.0, -66.0 49.0, -125.0 49.0, -125.0 24.0))"
+    },
+    // Extra places that are in place_writing and author origin, but not in the codification
+    {
+      "@id": "#place_At-Sea",
+      "name": "At Sea",
+      "@type": "Place",
+    },
+    {
+      "@id": "#place_Norfolk-Island",
+      "name": "Norfolk Island",
+      "@type": "Place",
+      "asWKT": "POLYGON((167.8 -29.1, 168.0 -29.1, 168.0 -28.9, 167.8 -28.9, 167.8 -29.1))"
+    },
+    {
+      "@id": "#place_Ireland",
+      "name": "Ireland",
+      "@type": "Place",
+      "asWKT": "POLYGON((-10.5 51.4, -5.5 51.4, -5.5 55.4, -10.5 55.4, -10.5 51.4))"
+    },
+    {
+      "@id": "#place_Italy",
+      "name": "Italy",
+      "@type": "Place",
+      "asWKT": "POLYGON((6.6 36.6, 18.5 36.6, 18.5 47.1, 6.6 47.1, 6.6 36.6))"
+    },
+    {
+      "@id": "#place_Azores",
+      "name": "Azores",
+      "@type": "Place",
+      "asWKT": "POLYGON((-31.3 36.8, -24.7 36.8, -24.7 39.7, -31.3 39.7, -31.3 36.8))"
+    },
+    {
+      "@id": "#place_Germany",
+      "name": "Germany",
+      "@type": "Place",
+      "asWKT": "POLYGON((5.9 47.3, 15.0 47.3, 15.0 55.1, 5.9 55.1, 5.9 47.3))"
+    },
+    {
+      "@id": "#place_British-Guiana",
+      "name": "British Guiana",
+      "@type": "Place",
+      "asWKT": "POLYGON((-61.4 1.0, -56.5 1.0, -56.5 8.5, -61.4 8.5, -61.4 1.0))"
+    },
+    {
+      "@id": "#place_Portugal",
+      "name": "Portugal",
+      "@type": "Place",
+      "asWKT": "POLYGON((-9.5 36.8, -6.2 36.8, -6.2 42.1, -9.5 42.1, -9.5 36.8))"
+    }
   ]
 }

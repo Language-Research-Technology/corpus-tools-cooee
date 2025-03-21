@@ -316,6 +316,7 @@ async function main() {
     const yearsLivedInAustralia = input.Abode in {un: '', nv: ''} ? '' : input.Abode;
     const birthPlaceId = `#place_${input.Origin.replace(' ', '-')}`;
     const birthPlace = placesById[birthPlaceId] ? { '@id': birthPlaceId } : '';
+    //todo check for A/GB
     const author = {
       "@id": generateArcpId(coll.namespace, "author", authorID),
       "@type": "Person",
@@ -333,8 +334,6 @@ async function main() {
       bornInAustralia,
       yearsLivedInAustralia
     };
-    
-    console.log(author);
     const authorClass = classesById[`#class_${input.Status}`];
 
 
@@ -345,6 +344,14 @@ async function main() {
     authorProxy["age"] = input.Age === 'un' ? '' : input.Age;
     authorProxy.class = authorClass ?  { "@id": authorClass['@id'] } : '';
     authorProxy["prov:specializationOf"] = author["@id"];
+
+    if (!birthDate && !authorProxy.age) {
+      author['@type'].push('Organization'); 
+      authorProxy['@type'].push('Organization');
+      author.description = authorProxy.description = 'This author may be an organization, but it is unclear in the original data source.';
+    }
+    console.log(authorProxy);
+
     // TODO - Addressees
 
 
