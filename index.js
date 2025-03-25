@@ -8,9 +8,9 @@ const path = require("path");
 
 // Some terms borrowed from elsewhere - more get added below for local custom properties
 const extraContext = {
-  "register": "http://w3id.org/meta-share/meta-share/register",
+  "register": "http://w3id.org/meta-share/meta-share/register"
   //"TextType": "http://w3id.org/meta-share/meta-share/TextType",
-  "period": "http://purl.org/dc/terms/Period"
+  //"period": "http://purl.org/dc/terms/Period"
 }
 
 // const periods = [
@@ -108,28 +108,33 @@ async function main() {
   // Make custom properties
   // Add some extra cont properties that are specific to this data set
   // These are not in the standard vocab, so we need to add them here
-  const birthDateEstimateEndProp = {  
-    "@id": generateArcpId(coll.namespace, "terms", "birthDateEstimateEnd"),
-    "rdfs:label": "birthDateEstimateEnd",
-    "rdfs:comment": "The end of the range of possible birth dates for a person - this is used when the birth date field was specified to the decade like 188x",
-    "@type": "rdf:Property"
+  const extraProperties = {
+    birthDateEstimateStart: 'The start of the range of possible birth dates for a person - this is used when the birth date field was specified to the decade like 188x',
+    birthDateEstimateEnd: 'The end of the range of possible birth dates for a person - this is used when the birth date field was specified to the decade like 188x',
+    arrivalDate: 'Date of arrival in Australia. ',
+    arrivalDateEstimateStart: 'The start of the range of possible arrival dates for a person',
+    arrivalDateEstimateEnd: 'The end of the range of possible arrival dates for a person',
+    bornInAustralia: 'Whether the person was born in Australia, If they were born in Australia the arrival year is the year they are born',
+    yearsLivedInAustralia: 'The number of years the person lived in Australia',
+    age: 'The age of the person at the time of the text',
+    class: 'The social class of the person at the time of the text',
+    place: 'The place of residence of the person at the time',
+    //register: 'The type of register the text was taken from',
+    textType: 'The type of text'
+  };
+
+  for (const propName in extraProperties) {
+    const propId = generateArcpId(coll.namespace, 'terms', propName)
+    // Add the prop id to the context 
+    extraContext[propName] = propId;
+    // Add the custom props to the crate 
+    corpusCrate.addEntity({ 
+      '@id': propId,
+      '@type': 'rdf:Property',
+      'rdfs:label': propName,
+      'rdfs:comment': extraProperties[propName]
+    });
   }
-  extraContext["birthDateEstimateEnd"] = birthDateEstimateEndProp["@id"];
-
-  const birthDateEstimateStartProp = {  
-    "@id": generateArcpId(coll.namespace, "terms", "birthDateEstimateStart"),
-    "rdfs:label": "birthDateEstimateStart",
-    "rdfs:comment": "The start of the range of possible birth dates for a person - this is used when the birth date field was specified to the decade like 188x",
-    "@type": "rdf:Property"
-  }
-  extraContext["birthDateEstimateStart"] = birthDateEstimateStartProp["@id"];
-
-  
-
-
-  // Add the custom props to the crate 
-  corpusCrate.addEntity(birthDateEstimateEndProp);
-  corpusCrate.addEntity(birthDateEstimateStartProp);
 
   // TODO need some tools for all this
   corpusCrate.addContext(vocab.getContext());
@@ -138,10 +143,6 @@ async function main() {
   dataDir = corpusCrate.getItem("data/");
 
   corpusCrate.addProfile(languageProfileURI("Collection"));
-
-
-
-
 
   const corpusRoot = corpus.rootDataset;
   corpusRoot["@type"] = ["Dataset", "RepositoryCollection"];
@@ -239,7 +240,6 @@ async function main() {
     let [birthDate, birthDateEstimateStart, birthDateEstimateEnd] = handleUncertainYear(input.Birth);
     let arrivalDateEstimateStart = birthDateEstimateStart;
     let arrivalDateEstimateEnd = birthDateEstimateEnd;
-    //TODO: define rdf property for date estimate
 
     if (arrivalDate === "native") {
       bornInAustralia = true;
@@ -296,9 +296,6 @@ async function main() {
       author.description = authorProxy.description = 'This author may be an organization, but it is unclear in the original data source.';
     }
     //console.log(authorProxy);
-
-    // TODO - Addressees
-
 
     // TODO - sort out citations for federation debates
 
@@ -366,7 +363,7 @@ async function main() {
     const [startInt, endInt] = item.temporalCoverage.split('/').map(parseInt);
     const dateInt = parseInt(date);
     if (startInt > date || endInt < date) { 
-      console.log(item); 
+      console.error(item); 
       return;
     }
 
@@ -451,13 +448,13 @@ async function main() {
     a["@id"].localeCompare(b["@id"]))
   )
   console.log(corpusRoot.toJSON());
-  // for (let item of corpusCrate.getGraph()) {
-  //   /// TODO - change to a new getItemsOfType() when available
-  //   if (corpusCrate.utils.asArray(item["@type"]).includes("File")) {
-  //     await corpus.addFile(item, coll.templateCrateDir, null, false);
-  //   }
-  // }
-  // await corpus.addToRepo();
+  for (let item of corpusCrate.getGraph()) {
+    /// TODO - change to a new getItemsOfType() when available
+    if (corpusCrate.utils.asArray(item["@type"]).includes("File")) {
+      await corpus.addFile(item, coll.templateCrateDir, null, false);
+    }
+  }
+  await corpus.addToRepo();
 }
 
 main();
