@@ -116,9 +116,8 @@ async function main() {
     arrivalDateEstimateEnd: 'The end of the range of possible arrival dates for a person',
     bornInAustralia: 'Whether the person was born in Australia, If they were born in Australia the arrival year is the year they are born',
     yearsLivedInAustralia: 'The number of years the person lived in Australia',
-    age: 'The age of the person at the time of the text',
+    //age: 'The age of the person at the time of the text',
     class: 'The social class of the person at the time of the text',
-    place: 'The place of residence of the person at the time',
     //register: 'The type of register the text was taken from',
     textType: 'The type of text'
   };
@@ -286,7 +285,7 @@ async function main() {
     authorProxy["@type"] = ["Person"];
     authorProxy["@id"] = `${authorProxy["@id"]}-${input.Nr}-status`;
     authorProxy.name = `${input.Name} - status ${date} text #${input.Nr}`;
-    authorProxy["age"] = input.Age === 'un' ? '' : input.Age;
+    authorProxy["ldac:age"] = input.Age === 'un' ? '' : input.Age;
     authorProxy.class = getEntityRef(`#class_${input.Status}`);
     authorProxy["prov:specializationOf"] = author["@id"];
 
@@ -302,7 +301,7 @@ async function main() {
     var citedId = generateArcpId(coll.namespace, "work", input.Source.replace(", ", "").replace(/ /g, "_"))
     var cited = corpusCrate.getItem(citedId)
     if (!cited) {
-      //Not an exact match - lets try jsut by name
+      //Not an exact match - lets try just by name
       const authorName = input.Source.replace(/,.*/, "").replace(/ /g, "_").replace(/\d+/, "");
       cited = citedNames[authorName];
       if (!cited) {
@@ -325,7 +324,7 @@ async function main() {
       name: `${input.Nr} Recipient`,
       //"gender": input.AdresseeGender,
       class: getEntityRef(`#class_${input.AdresseeStatus}`),
-      place: getEntityRef(`#class_${input.AdresseePlace.trim().replace(' ', '-')}`)
+      homeLocation: getEntityRef(`#place_${input.AdresseePlace.trim().replace(' ', '-')}`)
     };
     const recipientGender = input.AdresseeGender.toLowerCase();
     if (recipientGender in {m:'', f:''}) {
@@ -335,7 +334,7 @@ async function main() {
       recipient['@type'] = 'PeopleAudience';
       recipient.name = `${input.Nr} Family Recipient`;
     }
-
+    
     const item = {
       "@id": id,
       "@type": ["RepositoryObject"],
