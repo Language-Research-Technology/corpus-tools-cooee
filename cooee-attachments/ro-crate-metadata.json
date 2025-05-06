@@ -2,10 +2,8 @@
   "@context": [
     "https://w3id.org/ro/crate/1.1/context",
     {
-      "@vocab": "http://schema.org/"
-    },
-    {
-      "@base": null
+      "@vocab": "http://schema.org/",
+      "ldac": "https://w3id.org/ldac/terms#"
     }
   ],
   "@graph": [
@@ -40,9 +38,77 @@
           "@id": "https://www.peterlang.com/search?f_0=author&q_0=Clemens+W.+A.+Fritz"
         }
       ],
+      "dct:rightsHolder": [
+        {
+          "@id": "https://www.peterlang.com/search?f_0=author&q_0=Clemens+W.+A.+Fritz"
+        }
+      ],
+      "accountablePerson": [
+        {
+          "@id": "https://www.peterlang.com/search?f_0=author&q_0=Clemens+W.+A.+Fritz"
+        }
+      ],
+      "publisher": [
+        {
+          "@id": "https://ror.org/02sc3r913"
+        }
+      ],
       "citation": [
         {
           "@id": "https://doi.org/10.3726/978-3-653-01830-1"
+        }
+      ],
+      "hasPart": [
+        {
+          "@id": "#originalData"
+        }
+      ],
+      "datePublished": "2012",
+      "license": [
+        {
+          "@id": "https://creativecommons.org/licenses/by/4.0/"
+        }
+      ],
+      "doi":"https://doi.org/10.26180/23961609",
+      "ldac:hasCollectionProtocol": {
+        "@id": "3-COOEE-4.doc"
+      },
+      "isBasedOn": {
+        "@id": "#originalData"
+      },
+      "@reverse": {}
+    },
+    {
+      "@id": "#originalData",
+      "@type": "Dataset",
+      "name": "Original Data",
+      "description": [
+        "Original data for the corpus including the original spreadsheet in Microsoft Excel format (.xls) and the same data in .xlsx format."
+      ],
+      "author": [
+        {
+          "@id": "https://www.peterlang.com/search?f_0=author&q_0=Clemens+W.+A.+Fritz"
+        }
+      ],
+      "dct:rightsHolder": [
+        {
+          "@id": "https://www.peterlang.com/search?f_0=author&q_0=Clemens+W.+A.+Fritz"
+        }
+      ],
+      "accountablePerson": [
+        {
+          "@id": "https://www.peterlang.com/search?f_0=author&q_0=Clemens+W.+A.+Fritz"
+        }
+      ],
+      "publisher": [
+        {
+          "@id": "https://ror.org/02sc3r913"
+        }
+      ],
+      "datePublished": "2012",
+      "license": [
+        {
+          "@id": "https://creativecommons.org/licenses/by/4.0/"
         }
       ],
       "hasPart": [
@@ -61,20 +127,18 @@
         {
           "@id": "COOEE_contents_original.xlsx"
         }
-      ],
-      "datePublished": "2012",
-      "license": [
-        {
-          "@id": "https://creativecommons.org/licenses/by/4.0/"
-        }
-      ],
-      "doi":"https://doi.org/10.26180/23961609",
-      "@reverse": {}
+      ]
     },
     {
       "@id": "3-COOEE-4.doc",
-      "@type": "File",
-      "name": "A COrpus of Oz Early English (COOEE)",
+      "@type": ["File", "ldac:CollectionProtocol"],
+      "name": "3-COOEE-4.doc",
+      "author": [
+        {
+          "@id": "https://www.peterlang.com/search?f_0=author&q_0=Clemens+W.+A.+Fritz"
+        }
+      ],
+      "datePublished": "2012",
       "dateModified": [
         "2021-11-10T11:16:31+11:00"
       ],
@@ -97,7 +161,7 @@
     },
     {
       "@id": "https://creativecommons.org/licenses/by/4.0/",
-      "@type": "OrganizationReuseLicense",
+      "@type": "DataReuseLicense",
       "name": "Attribution 4.0 International (CC BY 4.0)",
       "description": [
         "You are free to share (copy and redistribute the material in any medium or format) and adapt (remix, transform and build upon the material for any purpose, even commercially)."
@@ -213,8 +277,13 @@
       }
     },
     {
+      "@id": "https://ror.org/02sc3r913",
+      "@type": "Organization",
+      "name": "Griffith University"
+    },    
+    {
       "@id": "https://doi.org/10.3726/978-3-653-01830-1",
-      "@type": "Book",
+      "@type": ["CreativeWork", "Book"],
       "name": "From English in Australia to Australian English",
       "datePublished": [
         "2012"
@@ -232,7 +301,7 @@
     },
     {
       "@id": "https://www.nationalarchives.gov.uk/PRONOM/fmt/61",
-      "@type": "website",
+      "@type": ["WebPage", "Standard"],
       "name": "Microsoft Excel 97 Workbook (xls)",
       "@reverse": {
         "encodingFormat": [
@@ -247,7 +316,7 @@
     },
     {
       "@id": "https://www.nationalarchives.gov.uk/PRONOM/fmt/214",
-      "@type": "website",
+      "@type": ["WebPage", "Standard"],
       "name": "Microsoft Excel for Windows",
       "@reverse": {
         "encodingFormat": [
@@ -262,7 +331,7 @@
     },
     {
       "@id": "https://www.nationalarchives.gov.uk/PRONOM/fmt/40",
-      "@type": "website",
+      "@type": ["WebPage", "Standard"],
       "name": "Microsoft Word Document",
       "@reverse": {
         "encodingFormat": [
@@ -272,30 +341,6 @@
         ]
       }
     },
-    {
-      "@id": "#class_I",
-      "name": "Upper Class",
-      "description": " Nobility, university education, government service; Parliaments and Committees",
-      "@type": "DefinedTerm"
-    },
-    {
-      "@id": "#class_II",
-      "name": "Upper Middle Class",
-      "description": " educated citizens, gentlemen",
-      "@type": "DefinedTerm"
-    },
-    {
-      "@id": "#class_III",
-      "name": "Lower Middle Class",
-      "description": " free settlers with little education",
-      "@type": "DefinedTerm"
-    },
-    {
-      "@id": "#class_IIII",
-      "name": "Lower Class",
-      "description": " convicts, labourers, uneducated people, servants",
-      "@type": "DefinedTerm"
-    },  
     {
       "@id": "#place_A",
       "name": "Australia",
