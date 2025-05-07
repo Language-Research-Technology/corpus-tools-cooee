@@ -69,7 +69,7 @@
           "@id": "https://creativecommons.org/licenses/by/4.0/"
         }
       ],
-      "doi":"https://doi.org/10.26180/23961609",
+      "ldac:doi":"https://doi.org/10.26180/23961609",
       "ldac:hasCollectionProtocol": {
         "@id": "3-COOEE-4.doc"
       },
