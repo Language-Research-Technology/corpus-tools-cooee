@@ -173,7 +173,7 @@ async function main() {
   corpusCrate.getEntity('#textType').range = { "@id": "#TextTypes" };
 
   // TODO need some tools for all this
-  //corpusCrate.addContext(vocab.getContext());
+  //corpusCrate.addCntext(vocab.getContext());
   corpusCrate.addContext(extraContext);
 
   dataDir = corpusCrate.getItem("data/");
@@ -332,7 +332,7 @@ async function main() {
     authorProxy["@id"] = `${authorProxy["@id"]}-${input.Nr}-status`;
     authorProxy.name = `${input.Name} - status ${date} text #${input.Nr}`;
     authorProxy["ldac:age"] = input.Age === 'un' ? '' : input.Age;
-    authorProxy.socialClass = getEntityRef(`#socialClass_${input.Status}`);
+    authorProxy.socialClass = getEntityRef(`#SocialClass_${input.Status}`);
     authorProxy["prov:specializationOf"] = author["@id"];
 
     if (!birthDate && !authorProxy.age) {
