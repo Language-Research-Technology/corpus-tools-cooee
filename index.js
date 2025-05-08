@@ -262,10 +262,12 @@ async function main() {
     textType: 'The type of text'
   };
 
+  const localTermPrefix = generateArcpId(coll.namespace, "terms#");
+
   for (const propName in extraProperties) {
-    const propId = '#' + propName;
+    const propId = localTermPrefix + propName;
     // Add the prop id to the context 
-    extraContext[propName] = propId;
+    //extraContext[propName] = propId;
     // Add the custom props to the crate 
     corpusCrate.addEntity({
       '@id': propId,
@@ -274,11 +276,12 @@ async function main() {
       'rdfs:comment': extraProperties[propName]
     });
   }
-  corpusCrate.getEntity('#socialClass').range = { "@id": "#SocialClasses" };
-  corpusCrate.getEntity('#textType').range = { "@id": "#TextTypes" };
+  corpusCrate.getEntity(localTermPrefix + 'socialClass').range = { "@id": localTermPrefix + "SocialClasses" };
+  corpusCrate.getEntity(localTermPrefix + 'textType').range = { "@id": localTermPrefix + "TextTypes" };
 
   // TODO need some tools for all this
   //corpusCrate.addCntext(vocab.getContext());
+  extraContext.local = localTermPrefix
   corpusCrate.addContext(extraContext);
 
   dataDir = corpusCrate.getItem("data/");
@@ -420,16 +423,16 @@ async function main() {
       // Some entries are annotated with a star - reasons unknown. They do not appear to be a disambiguating marker 
       // for people with the same name as the demographic or other information always lines up.
       name: input.Name.replace('*', ''),
-      birthDate,
-      birthDateEstimateStart,
-      birthDateEstimateEnd,
-      birthPlace,
+      'local:birthDate': birthDate,
+      'local:birthDateEstimateStart': birthDateEstimateStart,
+      'local:birthDateEstimateEnd': birthDateEstimateEnd,
+      'local:birthPlace': birthPlace,
       gender: input.Gender,
-      arrivalDate,
-      arrivalDateEstimateStart,
-      arrivalDateEstimateEnd,
-      bornInAustralia,
-      yearsLivedInAustralia
+      'local:arrivalDate': arrivalDate,
+      'local:arrivalDateEstimateStart': arrivalDateEstimateStart,
+      'local:arrivalDateEstimateEnd': arrivalDateEstimateEnd,
+      'local:bornInAustralia': bornInAustralia,
+      'local:yearsLivedInAustralia': yearsLivedInAustralia
     };
 
     const authorProxy = JSON.parse(JSON.stringify(author));
@@ -598,11 +601,11 @@ async function main() {
     a["@id"].localeCompare(b["@id"]))
   )
   console.log(corpusRoot.toJSON());
-  for (let entity of corpusCrate.entities()) {
-    if (entity["@type"].includes("File")) {
-      await corpus.addFile(entity, coll.templateCrateDir, null, false);
-    }
-  }
+  // for (let entity of corpusCrate.entities()) {
+  //   if (entity["@type"].includes("File")) {
+  //     await corpus.addFile(entity, coll.templateCrateDir, null, false);
+  //   }
+  // }
   await corpus.addToRepo();
 }
 

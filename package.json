@@ -22,7 +22,7 @@
     "exceljs": "^4.3.0",
     "fs-extra": "^10.0.0",
     "language-data-commons-vocabs": "github:Language-Research-Technology/language-data-commons-vocabs",
-    "oni-ocfl": "github:Language-Research-Technology/oni-ocfl#update_addvalidator",
+    "oni-ocfl": "github:Language-Research-Technology/oni-ocfl",
     "ro-crate-html": "^0.1.6",
     "xlsx": "^0.17.3"
   }
