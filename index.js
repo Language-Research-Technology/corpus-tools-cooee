@@ -57,26 +57,131 @@ const socialClasses = [
   }
 ];
 const registers = [
-  { "@id": "#Register_SB", "name": "Speech Based", "@type": "DefinedTerm", "inDefinedTermSet": { "@id": "#Registers" } },
-  { "@id": "#Register_PrW", "name": "Private Written", "@type": "DefinedTerm", "inDefinedTermSet": { "@id": "#Registers" } },
-  { "@id": "#Register_PcW", "name": "Public Written", "@type": "DefinedTerm", "inDefinedTermSet": { "@id": "#Registers" } },
-  { "@id": "#Register_GE", "name": "Government English", "@type": "DefinedTerm", "inDefinedTermSet": { "@id": "#Registers" } }
+  {
+    "@id": "#Register_SB",
+    "name": "Speech Based",
+    "description": "Material based on transcription or representation of spoken language",
+    "@type": "DefinedTerm",
+    "inDefinedTermSet": { "@id": "#Registers" }
+  },
+  {
+    "@id": "#Register_PrW",
+    "name": "Private Written",
+    "description": "Material written for an audience personally known to the writer and not intended for publication",
+    "@type": "DefinedTerm",
+    "inDefinedTermSet": { "@id": "#Registers" }
+  },
+  {
+    "@id": "#Register_PcW",
+    "name": "Public Written",
+    "description": "Material written for the general public or for some person who was not a friend of the writer, with publication a possibility",
+    "@type": "DefinedTerm",
+    "inDefinedTermSet": { "@id": "#Registers" }
+  },
+  {
+    "@id": "#Register_GE",
+    "name": "Government English",
+    "description": "Material written for use in the activity of government",
+    "@type": "DefinedTerm",
+    "inDefinedTermSet": { "@id": "#Registers" }
+  }
 ];
 const textTypes = [
-  { "@id": "#TextType_MI", "name": "Minutes", "@type": "DefinedTerm", "inDefinedTermSet": { "@id": "#TextTypes" } },
-  { "@id": "#TextType_PL", "name": "Play", "@type": "DefinedTerm", "inDefinedTermSet": { "@id": "#TextTypes" } },
-  { "@id": "#TextType_SP", "name": "Speeches", "@type": "DefinedTerm", "inDefinedTermSet": { "@id": "#TextTypes" } },
-  { "@id": "#TextType_DI", "name": "Diaries", "@type": "DefinedTerm", "inDefinedTermSet": { "@id": "#TextTypes" } },
-  { "@id": "#TextType_PC", "name": "Private Correspondence", "@type": "DefinedTerm", "inDefinedTermSet": { "@id": "#TextTypes" } },
-  { "@id": "#TextType_MM", "name": "Memoirs", "@type": "DefinedTerm", "inDefinedTermSet": { "@id": "#TextTypes" } },
-  { "@id": "#TextType_NB", "name": "Newspapers & Broadsides", "@type": "DefinedTerm", "inDefinedTermSet": { "@id": "#TextTypes" } },
-  { "@id": "#TextType_NV", "name": "Narratives", "@type": "DefinedTerm", "inDefinedTermSet": { "@id": "#TextTypes" } },
-  { "@id": "#TextType_OC", "name": "Official Correspondence", "@type": "DefinedTerm", "inDefinedTermSet": { "@id": "#TextTypes" } },
-  { "@id": "#TextType_RP", "name": "Reports", "@type": "DefinedTerm", "inDefinedTermSet": { "@id": "#TextTypes" } },
-  { "@id": "#TextType_VE", "name": "Verse", "@type": "DefinedTerm", "inDefinedTermSet": { "@id": "#TextTypes" } },
-  { "@id": "#TextType_IC", "name": "Imperial Correspondence", "@type": "DefinedTerm", "inDefinedTermSet": { "@id": "#TextTypes" } },
-  { "@id": "#TextType_LG", "name": "Legal English", "@type": "DefinedTerm", "inDefinedTermSet": { "@id": "#TextTypes" } },
-  { "@id": "#TextType_PP", "name": "Petitions & Proclamations", "@type": "DefinedTerm", "inDefinedTermSet": { "@id": "#TextTypes" } }
+  {
+    "@id": "#TextType_MI",
+    "name": "Minutes",
+    "description": "Testimony, Hansard, Minutes",
+    "@type": "DefinedTerm",
+    "inDefinedTermSet": { "@id": "#TextTypes" }
+  },
+  {
+    "@id": "#TextType_PL",
+    "name": "Play",
+    "description": "A planned, creative, rendition of discourse with two or more participants intended for presentation to an audience.",
+    "@type": "DefinedTerm",
+    "inDefinedTermSet": { "@id": "#TextTypes" }
+  },
+  {
+    "@id": "#TextType_SP",
+    "name": "Speeches",
+    "description": "Addresses, Sermons, Speeches in Assemblies",
+    "@type": "DefinedTerm",
+    "inDefinedTermSet": { "@id": "#TextTypes" }
+  },
+  {
+    "@id": "#TextType_DI",
+    "name": "Diaries",
+    "description": "Diary, Journal",
+    "@type": "DefinedTerm",
+    "inDefinedTermSet": { "@id": "#TextTypes" }
+  },
+  {
+    "@id": "#TextType_PC",
+    "name": "Private Correspondence",
+    "description": "personal letters",
+    "@type": "DefinedTerm",
+    "inDefinedTermSet": { "@id": "#TextTypes" }
+  },
+  {
+    "@id": "#TextType_MM",
+    "name": "Memoirs",
+    "description": "Personal Memoirs",
+    "@type": "DefinedTerm", "inDefinedTermSet": { "@id": "#TextTypes" }
+  },
+  {
+    "@id": "#TextType_NB",
+    "name": "Newspapers & Broadsides",
+    "description": "Periodicals, Broadsides, Magazines",
+    "@type": "DefinedTerm", "inDefinedTermSet": { "@id": "#TextTypes" }
+  },
+  {
+    "@id": "#TextType_NV",
+    "name": "Narratives",
+    "description": "Novels and short stories",
+    "@type": "DefinedTerm", "inDefinedTermSet": { "@id": "#TextTypes" }
+  },
+  {
+    "@id": "#TextType_OC",
+    "name": "Official Correspondence",
+    "description": "To Office Bearers, Letters to the Editor, Pastorals, Business Letters",
+    "@type": "DefinedTerm",
+    "inDefinedTermSet": { "@id": "#TextTypes" }
+  },
+  {
+    "@id": "#TextType_RP",
+    "name": "Reports",
+    "description": "Histories, Accounts, Statements, Essays",
+    "@type": "DefinedTerm",
+    "inDefinedTermSet": { "@id": "#TextTypes" }
+  },
+  {
+    "@id": "#TextType_VE",
+    "name": "Verse",
+    "description": "writing arranged with a metrical rhythm, typically having a rhyme",
+    "@type": "DefinedTerm",
+    "inDefinedTermSet": { "@id": "#TextTypes" }
+  },
+  {
+    "@id": "#TextType_IC",
+    "name": "Imperial Correspondence",
+    "description": "Among Office Bearers, Orders",
+    "@type": "DefinedTerm",
+    "inDefinedTermSet": { "@id": "#TextTypes" }
+  },
+  {
+    "@id": "#TextType_LG",
+    "name": "Legal English",
+    "description": "Laws, Verdicts, Grants, Contracts, Regulations, reports of court proceedings (but not minutes)",
+    "@type": "DefinedTerm",
+    "inDefinedTermSet": { "@id": "#TextTypes" }
+  },
+  {
+    "@id": "#TextType_PP",
+    "name": "Petitions & Proclamations",
+    "description": "Petitions, Proclamations, Resolutions, Official Recommendations",
+    "@type": "DefinedTerm",
+    "inDefinedTermSet": { "@id": "#TextTypes" }
+  }
 ];
 
 const lingGenreMap = {
