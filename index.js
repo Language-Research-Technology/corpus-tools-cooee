@@ -1,6 +1,7 @@
 const { Collector, generateArcpId } = require("oni-ocfl");
 const { languageProfileURI, Languages, Vocab } = require("language-data-commons-vocabs");
 const XLSX = require('xlsx');
+const ExcelJS = require('exceljs');
 const { DataPack } = require('@ldac/data-packs');
 const { default: fsExtra } = require("fs-extra");
 const fs = require("fs");
@@ -195,11 +196,76 @@ const lingGenreMap = {
   NV: "Narrative",
   OC: "Informational",
   RP: "Report",
-  VE: "Forulaic",
+  VE: "Formulaic",
   IC: "Informational",
   LG: "Informational",
   PP: "Informational"
-}
+};
+
+const authorType = {
+  "Bench of Magistrates": "Organization",
+  "Legislative Council": "Organization",
+  "Colonial Secretary's Office": "Organization",
+  "Committee on Immigration": "Organization",
+  "Select Committee on Crown Lands": "Organization",
+  "Select Committee on General Grievances": "Organization",
+  "Select Committee on Minimum Upset Price of Land": "Organization",
+  "Legislative Council of NSW": "Organization",
+  "Gold Fields Commission": "Organization",
+  "Catholic Bishops of NSW": "Organization",
+  "Labour Defence Committee": "Organization",
+  "Australian Natives' Association": "Organization",
+
+  "Sydney Gazette": "Author on behalf of",
+  "Broadside": "Author on behalf of",
+  "Hobart Town Gazette": "Author on behalf of",
+  "Convicts": "Author on behalf of",
+  "Settlers of VDL": "Author on behalf of",
+  "Sydney Monitor": "Author on behalf of",
+  "Colonial Times": "Author on behalf of",
+  "Sydney Herald": "Author on behalf of",
+  "Western Australian Colonial News": "Author on behalf of",
+  "Van Diemen's Land Monthly": "Author on behalf of",
+  "Sydney Morning Herald": "Author on behalf of",
+  "The Australian": "Author on behalf of",
+  "Port Phillip Patriot": "Author on behalf of",
+  "Port Phillip Patriot and Melbourne Advertiser": "Author on behalf of",
+  "South Australian": "Author on behalf of",
+  "Australia Felix Monthly": "Author on behalf of",
+  "The Argus": "Author on behalf of",
+  "Geelong Advertiser": "Author on behalf of",
+  "The Age": "Author on behalf of",
+  "Inter-Colonial Conference": "Author on behalf of",
+  "The Ballarat Courier": "Author on behalf of",
+  "Pelham Reports": "Author on behalf of",
+  "The Freeman's Journal": "Author on behalf of",
+  "The Boomerang": "Author on behalf of",
+  "The Bulletin": "Author on behalf of",
+  "Woman's World": "Author on behalf of",
+  "The Worker": "Author on behalf of",
+  "Leichhardt and Petersham Guardian": "Author on behalf of",
+  "Table Talk": "Author on behalf of",
+  "The Australian Workman": "Author on behalf of",
+  "Kalgoorli Miner": "Author on behalf of",
+  "Residents of Eastern Goldfields": "Author on behalf of",
+  "Woman's Sphere": "Author on behalf of",
+
+  "Petition of Gentlemen": "Authors of",
+  "Janus Trial": "Authors of",
+  "Statutes At Large": "Authors of",
+  "Legislative Act": "Authors of",
+  "Regulations": "Authors of",
+  "Petition": "Authors of",
+  "Minute Book": "Authors of",
+  "Agreement": "Authors of",
+  "Report of Inquiry": "Authors of",
+  "Royal Commission": "Authors of",
+  "Constitution of Workers' Union": "Authors of",
+  "Manual": "Authors of",
+  "Act of Parliament": "Authors of",
+  "The Constitution": "Authors of",
+  "Law Reports": "Authors of"
+};
 
 /**
  * Return the start and end year implied by an approximate indicator of year.
@@ -210,7 +276,7 @@ const lingGenreMap = {
 function handleUncertainYear(yearExpression) {
   yearExpression = yearExpression.toUpperCase();
   if (yearExpression === "?") {
-    return ['', '', ''];
+    return [ , , ];
   } else if (typeof yearExpression === 'string' && yearExpression.endsWith("X")) {
     return [
       yearExpression,
@@ -276,8 +342,8 @@ async function main() {
       'rdfs:comment': extraProperties[propName]
     });
   }
-  corpusCrate.getEntity(localTermPrefix + 'socialClass').range = { "@id": localTermPrefix + "SocialClasses" };
-  corpusCrate.getEntity(localTermPrefix + 'textType').range = { "@id": localTermPrefix + "TextTypes" };
+  corpusCrate.getEntity(localTermPrefix + 'socialClass').range = { "@id": "#SocialClasses" };
+  corpusCrate.getEntity(localTermPrefix + 'textType').range = { "@id": "#TextTypes" };
 
   // TODO need some tools for all this
   //corpusCrate.addCntext(vocab.getContext());
@@ -309,9 +375,11 @@ async function main() {
   // for (let period of periods) {
   //   corpusCrate.addEntity(period);
   // }
+  // const wb = new ExcelJS.Workbook();
+  // await wb.xlsx.readFile(coll.excelPath);
 
   var workbook = await XLSX.readFile(coll.excelPath, { cellDates: true });
-  var bibsheet = workbook.Sheets[workbook.SheetNames[1]];
+  var bibsheet = workbook.Sheets[workbook.SheetNames[2]];
   const bibData = XLSX.utils.sheet_to_json(bibsheet, { raw: false });
   corpusRoot.inLanguage = engLang;
   corpusRoot['ldac:subjectLanguage'] = engLang;
@@ -326,41 +394,64 @@ async function main() {
   // }
   // corpusCrate.addValues(corpusRoot, 'hasMember', supportingDocs)
   // Decode publications
-  const citedNames = {};
+  //const citedNames = {};
+  const lawsonTitles = {
+    'On the Track,': 'track',
+    'Verses Popular And Humorous,': 'verses',
+    'Over the Sliprails,': 'sliprails',
+    'To an Old Mate,': 'mate'
+  };
+  const citeIdAuthorMap = {
+    'Mitchell, Library': 'MitchellLibrary',
+    'Calvert Expedition,': 'Calvert',
+    'Langloh Parker, K.,': 'Langloh',
+    "Letters, Proceedings of the People's Federal Convention at Bathurst,": "LettersFederalConventionBathurst"
+  };
   for (const pub of bibData) {
     //console.log(pub)
     if (pub.Author) {
-      const authorName = pub.Author.replace(/,.*/, "").replace(/ /g, "_");
-      let pubDate = pub.Date.replace(/[A-Za-z\s]/, '').replace('-', '/');
+      let pubDate = pub.Date.replace(/[A-Za-z\s]/g, '').replace('-', '/');
       let dateRange = pubDate.split("/");
       if (dateRange.length > 1 && dateRange[1].length === 2) {
         dateRange[1] = dateRange[0].slice(0, 2) + dateRange[1];
         pubDate = dateRange.join("/");
       }
+      //handle some odd names as exceptions
+      let authorName = citeIdAuthorMap[pub.Author];
+      if (pub.Author === 'Lawson, Henry,' && lawsonTitles[pub.Title]) {
+        authorName = 'Lawson_' + (lawsonTitles[pub.Title]);
+      } else if (pub.Author.startsWith("Federation Debates")) {
+        authorName = pub.Author.trim().replace(/,$/, "").replace(/\s+(\d+)/, "").replace(/\s/g, "");
+      }
+      if (!authorName) authorName = pub.Author.replace(/,.*/, "").trim().replace(/ /g, "");
+      const [y1, y2] = pubDate.split('/');
+      const id = authorName + (y2 || y1);
+
       const work = {
         "@type": "CreativeWork",
-        author: pub.Author.replace(/,*$/, ''),
+        author: pub.Author.trim().replace(/,*$/, ''),
         datePublished: pubDate,
         name: pub.Title.replace(/,*$/, ''),
         publisher: pub.Source,
-        wordCount: pub["Words CEEA"],
-        "@id": generateArcpId(coll.namespace, "work", `${authorName}${pub.Date}`)
+        // wordCount: pub["Words CEEA"],
+        "@id": generateArcpId(coll.namespace, "work", id)
       }
+      //console.log(work['@id']);
       work.inLanguage = engLang;
       work.subjectLanguage = engLang;
       corpusCrate.addEntity(work);
-      citedNames[authorName] = work;
+      //citedNames[authorName] = work;
       // console.log(work["@id"], corpusCrate.getItem(work["@id"]))
     }
   }
+
   //console.log(citedNames);
   var worksheet = workbook.Sheets[workbook.SheetNames[0]];
 
   const data = XLSX.utils.sheet_to_json(worksheet, { raw: false, range: 1 });
   //console.log(data)
   for (let input of data) {
-
-    // console.log(input)
+    //console.log(input)
     //const interviewDate = new Date(input["Date of interview"]).toISOString().replace(/T.*/, "");
     /*
     {
@@ -385,20 +476,22 @@ async function main() {
       Pages: '10-11'
     }
     */
+
+    // TODO: strip asterisks from names
     const date = input["Year Writing"];
     const id = generateArcpId(coll.namespace, "item", input["Nr"]);
     const authorID = `${input.Name.replace(/[, ]+/, "_")}`;
-    let bornInAustralia = false;
-    let arrivalDate = input.Arrival;
+    let bornInAustralia;
+    let arrivalDate;
     let [birthDate, birthDateEstimateStart, birthDateEstimateEnd] = handleUncertainYear(input.Birth);
     let arrivalDateEstimateStart = birthDateEstimateStart;
     let arrivalDateEstimateEnd = birthDateEstimateEnd;
 
-    if (arrivalDate === "native") {
+    if (input.Arrival === "native") {
       bornInAustralia = true;
-      arrivalDate = '';
-    } else {
-      [arrivalDate, arrivalDateEstimateStart, arrivalDateEstimateEnd] = handleUncertainYear(arrivalDate);
+    } else if (input.Arrival !== "?") {
+      bornInAustralia = false;
+      [arrivalDate, arrivalDateEstimateStart, arrivalDateEstimateEnd] = handleUncertainYear(input.Arrival);
     }
 
     // # Abode: This captures the the number of years lived in Australia *at the time of
@@ -413,20 +506,18 @@ async function main() {
 
     // Place entities are defined in the ro-crate-metadata.json file 
     // Note that there are extra places that are in place_writing and author origin, but not in the codification
-    // A slash (/) in the Origin, such as A/GB will be converted to multiple places eg [A, GB]
-    const origin = input.Origin.split('/').filter(e => e);
-    const birthPlace = origin.map(o => getEntityRef(`#place_${o.trim().replace(' ', '-')}`)).filter(e => e);
+    const birthPlace = getEntityRef(`#place_${input.Origin.trim().replace(' ', '-')}`);
 
     const author = {
       "@id": generateArcpId(coll.namespace, "author", authorID),
       "@type": ["Person"],
       // Some entries are annotated with a star - reasons unknown. They do not appear to be a disambiguating marker 
       // for people with the same name as the demographic or other information always lines up.
-      name: input.Name.replace('*', ''),
-      'local:birthDate': birthDate,
+      name: input.Name.trim().replace('*', ''),
+      'birthDate': birthDate,
       'local:birthDateEstimateStart': birthDateEstimateStart,
       'local:birthDateEstimateEnd': birthDateEstimateEnd,
-      'local:birthPlace': birthPlace,
+      'birthPlace': birthPlace,
       gender: input.Gender,
       'local:arrivalDate': arrivalDate,
       'local:arrivalDateEstimateStart': arrivalDateEstimateStart,
@@ -434,42 +525,60 @@ async function main() {
       'local:bornInAustralia': bornInAustralia,
       'local:yearsLivedInAustralia': yearsLivedInAustralia
     };
+    if (author.name in authorType) {
+      if (authorType[author.name] === 'Organization') {
+        author['@type'] = 'Organization';
+      } else {
+        author.name = authorType[author.name] + ' ' + author.name;
+        author.description = 'This author may be an organization, but it is unclear in the original data source.';
+      }
+    }
 
     const authorProxy = JSON.parse(JSON.stringify(author));
     authorProxy["@type"] = ["Person"];
     authorProxy["@id"] = `${authorProxy["@id"]}-${input.Nr}-status`;
-    authorProxy.name = `${input.Name} - status ${date} text #${input.Nr}`;
+    authorProxy.name = `${author.name} - status ${date} text #${input.Nr}`;
     authorProxy["ldac:age"] = input.Age === 'un' ? '' : input.Age;
-    authorProxy.socialClass = getEntityRef(`#SocialClass_${input.Status}`);
-    authorProxy["prov:specializationOf"] = author["@id"];
+    authorProxy['ldac:socialClass'] = getEntityRef(`#SocialClass_${input.Status}`);
+    authorProxy["prov:specializationOf"] = author;
 
-    if (!birthDate && !authorProxy.age) {
-      author['@type'].push('Organization');
-      authorProxy['@type'].push('Organization');
-      author.description = authorProxy.description = 'This author may be an organization, but it is unclear in the original data source.';
-    }
     //console.log(authorProxy);
 
     // TODO - sort out citations for federation debates
-
-    var citedId = generateArcpId(coll.namespace, "work", input.Source.replace(", ", "").replace(/ /g, "_"))
-    var cited = corpusCrate.getItem(citedId)
+    const sourceMap = {
+      'Collins1798': 'Collins1802',
+      'Tucker': 'Tucker1845',
+      'Corbyn1854': 'Corbyn1970',
+      'DecisionsofNSWSupremeCourt': 'DecisionsoftheSupremeCourtofNSW1841',
+      'Lawson1900Track': 'Lawson_track1900', //handle 'Lawson, 1900, Track'
+      'FederationDebatesAdelaideMarch30': 'FederationDebatesAdelaide1897',
+      'FederationDebatesAdelaideMarch28': 'FederationDebatesAdelaide1897',
+      'FederationDebatesAdelaideMarch24': 'FederationDebatesAdelaide1897',
+      'FederationDebatesMelbourneJan21': 'FederationDebatesMelbourne1898',
+      'FederationDebatesMelbourneJan24': 'FederationDebatesMelbourne1898',
+      'FederationDebatesSydneyMarch17': 'FederationDebatesSydney1891',
+      'FederationDebatesSydneyMarch10': 'FederationDebatesSydney1891',
+      'FederationDebatesSydneyMarch16': 'FederationDebatesSydney1891',
+      'FederationDebatesSydneyMarch15': 'FederationDebatesSydney1891'
+    };
+    let citSource = input.Source.replace(/[,\s]+/g, ""); //.replace(/ /g, "_");
+    // if (input.Source.match(/Federation Debates/)) {
+    //   citSource = input.Source.replace(/, .*/, "");
+    // }
+    if (sourceMap[citSource]) citSource = sourceMap[citSource];
+    var citedId = generateArcpId(coll.namespace, "work", citSource)
+    var cited = corpusCrate.hasEntity(citedId);
     if (!cited) {
-      //Not an exact match - lets try just by name
-      const authorName = input.Source.replace(/,.*/, "").replace(/ /g, "_").replace(/\d+/, "");
-      cited = citedNames[authorName];
-      if (!cited) {
-        console.log("CANNOT FIND REFERENCE", authorName);
-      }
+      console.log("CANNOT FIND REFERENCE", citedId);
     }
     const citationStubId = `${citedId}p${input.Pages}`;
     //console.log(input.Source)
     const citationStub = {
       "@type": "CreativeWork",
-      "materialType": vocab.getVocabItem("PrimaryMaterial"),
+      "ldac:materialType": vocab.getVocabItem("PrimaryMaterial"),
       "isPartOf": { "@id": citedId },
-      "name": input.Source,
-      "@id": citationStubId,
+      "name": input.Source, //Federation Debates Melbourne, Jan 21
+      "@id": citationStubId, // arpcp://.. /Federation_Debates_Melbourne1893p38-234
       "wordCount": input["# of words"]
     };
     const recipient = {
@@ -477,10 +586,10 @@ async function main() {
       //"@type": ["Person"],
       name: `${input.Nr} Recipient`,
       //"gender": input.AdresseeGender,
-      socialClass: getEntityRef(`#socialClass_${input.AdresseeStatus}`),
-      homeLocation: getEntityRef(`#place_${input.AdresseePlace.trim().replace(' ', '-')}`)
+      socialClass: getEntityRef(`#SocialClass_${input.Status_1}`),
+      homeLocation: getEntityRef(`#place_${input.Place.trim().replace(' ', '-')}`)
     };
-    const recipientGender = input.AdresseeGender.toLowerCase();
+    const recipientGender = input.Gender_1.toLowerCase();
     if (recipientGender in { m: '', f: '' }) {
       recipient['@type'] = 'Person';
       recipient.gender = recipientGender;
@@ -501,9 +610,9 @@ async function main() {
       "register": { "@id": `#Register_${input.Register}` },
       "textType": { "@id": `#TextType_${input.TextT}` },
       //"period": { "@id": `#period_${input.Nr.replace(/^(\d).+/, "$1")}` },
-      temporalCoverage: periods[input.Nr.split('-')[0]],
+      temporal: periods[input.Nr.split('-')[0]],
       locationCreated: getEntityRef(`#place_${input['Place Writing'].trim().replace(' ', '-')}`),
-      wordCount: input["# of words"],
+      // wordCount: input["# of words"],
       "ldac:linguisticGenre": vocab.getVocabItem(lingGenreMap[input.TextT]),
       "citation": citationStub
     };
@@ -513,7 +622,7 @@ async function main() {
 
     item.datePublished = input.Source.match(/.+(\d{4})/) ? input.Source.replace(/.+(\d{4})/, "$1") : date;
 
-    const [startInt, endInt] = item.temporalCoverage.split('/').map(parseInt);
+    const [startInt, endInt] = item.temporal.split('/').map(parseInt);
     const dateInt = parseInt(date);
     if (startInt > date || endInt < date) {
       console.error(item);
@@ -547,7 +656,7 @@ async function main() {
       "@type": ["File"],
       "materialType": vocab.getVocabItem("DerivedMaterial"),
       // "communicationMode": vocab.getVocabItem("WrittenLanguage"),
-      "annotationOf": citationStub,
+      "ldac:annotationOf": citationStub,
       "inLanguage": engLang,
       "encodingFormat": "text/plain"
     }
@@ -557,7 +666,7 @@ async function main() {
       "@id": `data/${input.Nr}-plain.txt`,
       "@type": ["File"],
       "materialType": vocab.getVocabItem("DerivedMaterial"),
-      "annotationOf": citationStub,
+      "ldac:annotationOf": citationStub,
       // "communicationMode": vocab.getVocabItem("WrittenLanguage"),
       "inLanguage": engLang,
       "encodingFormat": "text/plain"
@@ -600,7 +709,7 @@ async function main() {
   corpusRoot.hasMember.sort((a, b) => (
     a["@id"].localeCompare(b["@id"]))
   )
-  console.log(corpusRoot.toJSON());
+  //console.log(corpusRoot.toJSON());
   // for (let entity of corpusCrate.entities()) {
   //   if (entity["@type"].includes("File")) {
   //     await corpus.addFile(entity, coll.templateCrateDir, null, false);
