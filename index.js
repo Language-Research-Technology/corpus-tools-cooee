@@ -50,7 +50,7 @@ const socialClasses = [
     "inDefinedTermSet": { "@id": "#SocialClasses" }
   },
   {
-    "@id": "#SocialClass_IIII",
+    "@id": "#SocialClass_IV",
     "name": "Lower Class",
     "description": " convicts, labourers, uneducated people, servants",
     "@type": "DefinedTerm",
@@ -320,8 +320,8 @@ async function main() {
     arrivalDate: 'Date of arrival in Australia. ',
     arrivalDateEstimateStart: 'The start of the range of possible arrival dates for a person',
     arrivalDateEstimateEnd: 'The end of the range of possible arrival dates for a person',
-    bornInAustralia: 'Whether the person was born in Australia, If they were born in Australia the arrival year is the year they are born',
-    yearsLivedInAustralia: 'The number of years the person lived in Australia',
+    //bornInAustralia: 'Whether the person was born in Australia, If they were born in Australia the arrival year is the year they are born',
+    yearsLivedInAustralia: 'The number of years the person lived in Australia. It can also contain "nv" for native, meaning that the person was born in Australia, or "un" for unknown.',
     //age: 'The age of the person at the time of the text',
     socialClass: 'The social class of the person at the time of the text',
     //register: 'The type of register the text was taken from',
@@ -502,7 +502,8 @@ async function main() {
     // # but I'm not sure if that's comparable to the other estimates, spending birth - 18
     // # years in Australia is very different to spending 18-36 years of age, even if
     // # they're both the same number of years.
-    const yearsLivedInAustralia = input.Abode in { un: '', nv: '' } ? '' : input.Abode;
+    //const yearsLivedInAustralia = input.Abode in { un: '', nv: '' } ? '' : input.Abode;
+    const yearsLivedInAustralia = input.Abode;
 
     // Place entities are defined in the ro-crate-metadata.json file 
     // Note that there are extra places that are in place_writing and author origin, but not in the codification
@@ -522,7 +523,7 @@ async function main() {
       'local:arrivalDate': arrivalDate,
       'local:arrivalDateEstimateStart': arrivalDateEstimateStart,
       'local:arrivalDateEstimateEnd': arrivalDateEstimateEnd,
-      'local:bornInAustralia': bornInAustralia,
+      //'local:bornInAustralia': bornInAustralia,
       'local:yearsLivedInAustralia': yearsLivedInAustralia
     };
     if (author.name in authorType) {
@@ -614,13 +615,12 @@ async function main() {
       locationCreated: getEntityRef(`#place_${input['Place Writing'].trim().replace(' ', '-')}`),
       // wordCount: input["# of words"],
       "ldac:linguisticGenre": vocab.getVocabItem(lingGenreMap[input.TextT]),
+      datePublished: input.Source.match(/.+(\d{4})/) ? input.Source.replace(/.+(\d{4})/, "$1") : date,
       "citation": citationStub
     };
     if (recipient['@type']) {
       item.recipient = recipient;
     }
-
-    item.datePublished = input.Source.match(/.+(\d{4})/) ? input.Source.replace(/.+(\d{4})/, "$1") : date;
 
     const [startInt, endInt] = item.temporal.split('/').map(parseInt);
     const dateInt = parseInt(date);
