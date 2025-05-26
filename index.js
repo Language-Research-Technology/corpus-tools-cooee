@@ -615,7 +615,7 @@ async function main() {
       locationCreated: getEntityRef(`#place_${input['Place Writing'].trim().replace(' ', '-')}`),
       // wordCount: input["# of words"],
       "ldac:linguisticGenre": vocab.getVocabItem(lingGenreMap[input.TextT]),
-      datePublished: input.Source.match(/.+(\d{4})/) ? input.Source.replace(/.+(\d{4})/, "$1") : date,
+      datePublished: input.Source.match(/.+(\d{4})/) ? input.Source.replace(/.*(\d{4}).*/, "$1") : date,
       "citation": citationStub
     };
     if (recipient['@type']) {
