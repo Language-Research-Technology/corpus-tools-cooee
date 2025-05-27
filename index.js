@@ -446,8 +446,8 @@ async function main() {
   }
 
   //console.log(citedNames);
+  const repositoryObjects = [];
   var worksheet = workbook.Sheets[workbook.SheetNames[0]];
-
   const data = XLSX.utils.sheet_to_json(worksheet, { raw: false, range: 1 });
   //console.log(data)
   for (let input of data) {
@@ -704,11 +704,13 @@ async function main() {
     //corpusCrate.addItem(authorProxy);
 
     //corpusRoot.hasMember.push({"@id": item["@id"]});
-    corpusCrate.addValues(corpusRoot, 'hasMember', item)
+    //corpusCrate.addValues(corpusRoot, 'pcdm:hasMember', item);
+    repositoryObjects.push(item);
   }
-  corpusRoot.hasMember.sort((a, b) => (
+  repositoryObjects.sort((a, b) => (
     a["@id"].localeCompare(b["@id"]))
   )
+  corpusRoot['pcdm:hasMember'] = repositoryObjects;
   //console.log(corpusRoot.toJSON());
   // for (let entity of corpusCrate.entities()) {
   //   if (entity["@type"].includes("File")) {
