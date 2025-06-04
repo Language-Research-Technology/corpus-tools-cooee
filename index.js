@@ -1,7 +1,7 @@
 const { Collector, generateArcpId } = require("oni-ocfl");
 const { languageProfileURI, Languages, Vocab } = require("language-data-commons-vocabs");
 const XLSX = require('xlsx');
-const ExcelJS = require('exceljs');
+//const ExcelJS = require('exceljs');
 const { DataPack } = require('@ldac/data-packs');
 const { default: fsExtra } = require("fs-extra");
 const fs = require("fs");
@@ -300,8 +300,8 @@ async function main() {
     field: "name",
     value: "English",
   });
-  const coll = new Collector(); // Get all the paths etc from commandline
-  await coll.connect();
+  const coll = await Collector.create(); // Get all the paths etc from commandline
+  //await coll.connect();
   // Make a base corpus using template
   const corpus = coll.newObject(coll.templateCrateDir);
 

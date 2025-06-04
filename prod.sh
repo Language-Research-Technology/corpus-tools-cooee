@@ -12,5 +12,6 @@ NAMESPACE=hdl10.26180~23961609
 node index.js -r "${REPO_OUT_DIR}" \
         -t "${BASE_DATA_DIR}" -n ${REPO_NAME} \
         -s ${NAMESPACE} -x "${BASE_DATA_DIR}"/COOEE.XLS \
-        --vm "./node_modules/ro-crate-modes/modes/comprehensive-ldac.json" \
+        --sf \
+        --vm "https://language-research-technology.github.io/ro-crate-modes/modes/comprehensive-ldac.json" \
         -z "${REPO_SCRATCH_DIR}"

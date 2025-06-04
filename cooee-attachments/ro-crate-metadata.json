@@ -17,10 +17,7 @@
         "@id": "./"
       },
       "identifier": [
-        "ro-crate-metadata.json",
-        {
-          "@id": "#:localid:describo:e2a0e556-6163-43da-85aa-9f178bf092a0"
-        }
+        "ro-crate-metadata.json"
       ]
     },
     {
