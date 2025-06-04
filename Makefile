@@ -14,15 +14,15 @@ TEMP_DIR=${BASE_TEMP_DIR}
 
 .DEFAULT_GOAL := repo
 
-repo :
-    node index.js -r "${REPO_OUT_DIR}" \
-    -t "${BASE_DATA_DIR}" -n ${REPO_NAME} \
-    -p "${TEMP_DIR}" \
-    -s ${NAMESPACE} -x "${BASE_DATA_DIR}"/COOEE.XLS \
-    --sf \
-    --vm "https://language-research-technology.github.io/ro-crate-modes/modes/comprehensive-ldac.json" \
-    -z "${REPO_SCRATCH_DIR}"
+repo:
+	node index.js -r "${REPO_OUT_DIR}" \
+	-t "${BASE_DATA_DIR}" -n ${REPO_NAME} \
+	-p "${TEMP_DIR}" \
+	-s ${NAMESPACE} -x "${BASE_DATA_DIR}"/COOEE.XLS \
+	--sf \
+	--vm "https://language-research-technology.github.io/ro-crate-modes/modes/comprehensive-ldac.json" \
+	-z "${REPO_SCRATCH_DIR}"
 
-clean :
-    rm -rf ${TEMP_DIR}
-    rm -rf ${REPO_OUT_DIR}
+clean:
+	rm -rf ${TEMP_DIR}
+	rm -rf ${REPO_OUT_DIR}

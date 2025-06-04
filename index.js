@@ -540,7 +540,7 @@ async function main() {
     authorProxy["@id"] = `${authorProxy["@id"]}-${input.Nr}-status`;
     authorProxy.name = `${author.name} - status ${date} text #${input.Nr}`;
     authorProxy["ldac:age"] = input.Age === 'un' ? '' : input.Age;
-    authorProxy['ldac:socialClass'] = getEntityRef(`#SocialClass_${input.Status}`);
+    authorProxy['local:socialClass'] = getEntityRef(`#SocialClass_${input.Status}`);
     authorProxy["prov:specializationOf"] = author;
 
     //console.log(authorProxy);
