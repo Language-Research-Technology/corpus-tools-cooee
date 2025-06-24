@@ -14,7 +14,7 @@ TEMP_DIR=${BASE_TEMP_DIR}
 
 node index.js -r "${REPO_OUT_DIR}" \
 	-t "${BASE_DATA_DIR}" -n ${REPO_NAME} \
-	-s ${NAMESPACE} -x "${BASE_DATA_DIR}"/COOEE.XLS \
+	-s ${NAMESPACE} -x "${BASE_DATA_DIR}"/COOEE.XLS --vx \
 	--sf \
  	--vm "https://language-research-technology.github.io/ro-crate-modes/modes/comprehensive-ldac.json" \
 	-z "${REPO_SCRATCH_DIR}"
