@@ -55,7 +55,7 @@
           "@id": "https://doi.org/10.3726/978-3-653-01830-1"
         }
       ],
-      "hasPart": [
+      "pcdm:hasMember": [
         {
           "@id": "#originalData"
         }
@@ -123,8 +123,14 @@
         },
         {
           "@id": "COOEE_contents_original.xlsx"
+        },
+        {
+          "@id": "COOEE-Provenance.pdf"
         }
-      ]
+      ],
+      "pcdm:memberOf": {
+        "@id": "./"
+      }
     },
     {
       "@id": "3-COOEE-4.doc",
@@ -252,6 +258,27 @@
         {
           "@id": "https://www.nationalarchives.gov.uk/PRONOM/fmt/214"
         }
+      ],
+      "@reverse": {
+        "hasPart": [
+          {
+            "@id": "./"
+          }
+        ]
+      }
+    },
+    {
+      "@id": "COOEE-Provenance.pdf",
+      "@type": "File",
+      "name": "COOEE-Provenance.pdf",
+      "dateModified": [
+        "2025-06-28"
+      ],
+      "description": [
+        "Analysis of variations between the supplied spreadsheet files, including a list of changes made to the data."
+      ],
+      "encodingFormat": [
+        "application/pdf"
       ],
       "@reverse": {
         "hasPart": [
