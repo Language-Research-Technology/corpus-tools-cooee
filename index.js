@@ -686,7 +686,7 @@ async function main() {
 
     if (fs.existsSync(path.join(coll.templateCrateDir, file["@id"]))) {
       item['ldac:indexableText'] = plain;
-      item['ldac:mainText'] = file;
+      item['ldac:mainText'] = plain;
       corpusCrate.addValues(corpusRoot, "hasPart", file);
       corpusCrate.addValues(corpusRoot, "hasPart", plain);
     } else {
