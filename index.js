@@ -480,7 +480,7 @@ async function main() {
     // TODO: strip asterisks from names
     const date = input["Year Writing"];
     const id = generateArcpId(coll.namespace, "item", input["Nr"]);
-    const authorID = `${input.Name.replace(/[, ]+/, "_")}`;
+    const authorID = `${input.Name.replaceAll(/[, ]+/g, "_")}`;
     let bornInAustralia;
     let arrivalDate;
     let [birthDate, birthDateEstimateStart, birthDateEstimateEnd] = handleUncertainYear(input.Birth);
@@ -536,7 +536,8 @@ async function main() {
     }
 
     const authorProxy = JSON.parse(JSON.stringify(author));
-    authorProxy["@type"] = ["Person"];
+    //authorProxy["@type"] = ["Person"];
+    //authorProxy["@type"] = author['@type'];
     authorProxy["@id"] = `${authorProxy["@id"]}-${input.Nr}-status`;
     authorProxy.name = `${author.name} - status ${date} text #${input.Nr}`;
     authorProxy["ldac:age"] = input.Age === 'un' ? '' : input.Age;
@@ -685,7 +686,7 @@ async function main() {
     //if it has a file it's a data entity, must have a file path relative to root of crate
 
     if (fs.existsSync(path.join(coll.templateCrateDir, file["@id"]))) {
-      item['ldac:indexableText'] = plain;
+      //item['ldac:indexableText'] = plain;
       item['ldac:mainText'] = plain;
       corpusCrate.addValues(corpusRoot, "hasPart", file);
       corpusCrate.addValues(corpusRoot, "hasPart", plain);
